@@ -31,7 +31,7 @@ public class Constants {
 
     public static final String SP_USER_INFO = "user_info";//用户信息
 
-    public static final String SP_IS_AUTH = "is_auth";//是否验证了身份（即是否登录了）
+    public static final String SP_IS_AUTH = "is_auth";//是否验证了身份（用户是否登录了）
 
     //================= INTENT ====================
 
