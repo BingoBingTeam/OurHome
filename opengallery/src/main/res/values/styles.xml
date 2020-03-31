@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 底部弹框style -->
+    <style name="BottomPopuAnim">
+        <item name="android:windowEnterAnimation">@anim/bottom_popu_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/bottom_popu_out_anim</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TitleBar">
+        <attr name="bgColor" format="reference" /><!--标题栏背景颜色-->
+        <attr name="imageTitleShow" format="boolean" /><!--图标是否显示-->
+        <attr name="imageTitleRes" format="reference" /><!--图标资源-->
+        <attr name="textTitleShow" format="boolean" /><!--文字是否显示-->
+        <attr name="textTitleColor" format="reference" /><!--文字颜色-->
+        <attr name="imageBackShow" format="boolean" />
+        <attr name="imageBackRes" format="reference" />
+        <attr name="textBackShow" format="boolean" />
+        <attr name="textBackColor" format="reference" />
+        <attr name="imageAddShow" format="boolean" />
+        <attr name="imageAddRes" format="reference" />
+        <attr name="textAddShow" format="boolean" />
+        <attr name="textAddColor" format="reference" />
+        <attr name="imageMoreShow" format="boolean" />
+        <attr name="imageMoreRes" format="reference" />
+        <attr name="textMoreShow" format="boolean" />
+        <attr name="textMoreColor" format="reference" />
+        <attr name="lineViewShow" format="boolean" /><!--底部水平分割线是否显示-->
+    </declare-styleable>
+</resources>

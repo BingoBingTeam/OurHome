@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="btn_radius">5dp</dimen>
+    <dimen name="bottom_bar_height">52dp</dimen>
+    <dimen name="banner_height">200dp</dimen>
+    <dimen name="banner_tip_text_size">12sp</dimen>
+    <dimen name="min_size">12sp</dimen>
+    <dimen name="small_size">14sp</dimen>
+    <dimen name="normal_size">16sp</dimen>
+    <dimen name="large_size">18sp</dimen>
+    <dimen name="max_size">21sp</dimen>
+    <dimen name="input_money_height">200dp</dimen>
+</resources>

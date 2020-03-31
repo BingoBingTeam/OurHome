@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">opengallery</string>
+    <string name="transition_share">transition_share</string>
+</resources>

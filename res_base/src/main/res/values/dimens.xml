@@ -1,0 +1,4 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="title_bar_title_text_size">18sp</dimen>
+    <dimen name="title_bar_height">48dp</dimen>
+</resources>
