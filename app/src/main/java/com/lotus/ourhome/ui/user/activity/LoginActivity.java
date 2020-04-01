@@ -23,8 +23,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.lotus.base.constants.BaseConstants;
 import com.lotus.ourhome.R;
 import com.lotus.ourhome.app.App;
+import com.lotus.ourhome.app.Constants;
 import com.lotus.ourhome.base.SimpleActivity;
 import com.lotus.ourhome.model.bean.BillBean;
 import com.lotus.ourhome.model.bean.FamilyMemberBean;
@@ -33,6 +35,7 @@ import com.lotus.ourhome.model.bean.GoodsTypeBean;
 import com.lotus.ourhome.model.bean.LedgerBean;
 import com.lotus.ourhome.model.bean.MoneyUseTypeBean;
 import com.lotus.ourhome.model.bean.UserBean;
+import com.lotus.ourhome.model.db.FamilyMemberBeanManager;
 import com.lotus.ourhome.model.db.GoodsSavePlaceBeanManager;
 import com.lotus.ourhome.model.db.GoodsTypeBeanManager;
 import com.lotus.ourhome.model.db.MoneyUseTypeBeanManager;
@@ -45,6 +48,7 @@ import com.lotus.ourhome.util.ToastUtil;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -350,6 +354,19 @@ public class LoginActivity extends SimpleActivity {
         int result = mPermissionUtil.checkPermissions();
         switch (result) {
             case PermissionUtil.ACTION_GRANTED_ALL_PERMISSION://通过了所有的权限
+                File file = getDatabasePath(SQLiteHelper.DATABASE_NAME);
+                if (file.exists()) {
+                    String newPath = BaseConstants.APP_FOLDER + "/" + SQLiteHelper.DATABASE_NAME;
+                    File folder = new File(BaseConstants.APP_FOLDER);
+                    if (!folder.exists()) {
+                        folder.mkdirs();
+                    }
+                    File database = new File(newPath);
+                    if (database.exists()) {
+                        database.delete();
+                    }
+                    FileUtil.copyFile(file.getAbsolutePath(), newPath);
+                }
                 if (CookieUtil.getAuth()) {
                     jumpToMain();
                     return;

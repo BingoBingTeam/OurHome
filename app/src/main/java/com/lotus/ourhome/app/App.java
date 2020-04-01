@@ -12,8 +12,8 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.lotus.base.utils.log.CrashHandler;
 import com.lotus.ourhome.R;
-import com.lotus.ourhome.component.CrashHandler;
 import com.lotus.ourhome.component.InitializeService;
 import com.lotus.ourhome.ui.user.activity.LoginActivity;
 import com.lotus.ourhome.util.CookieUtil;
@@ -78,12 +78,12 @@ public class App extends Application {
 
         //初始化数据库
         //Realm.init(getApplicationContext());
-        if (Constants.DEBUG) {
+//        if (Constants.DEBUG) {
             // x.Ext.setDebug(false);// xUtils
             // 程序崩溃日志
             CrashHandler crashHandler = CrashHandler.getInstance();
             crashHandler.init(getApplicationContext());
-        }
+//        }
 
         //在子线程中完成其他初始化
         InitializeService.start(this);

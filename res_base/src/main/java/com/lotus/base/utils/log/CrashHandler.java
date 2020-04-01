@@ -10,6 +10,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.lotus.base.constants.BaseConstants;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -32,7 +34,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
 	public static final String TAG = "CrashHandler";
 
-	private static final String crashFilePath = "/sdcard/OurHome/log/crash/";
+	private static final String crashFilePath = BaseConstants.CRASH_FOLDER;
 
 	// 系统默认的UncaughtException处理类
 	private UncaughtExceptionHandler mDefaultHandler;

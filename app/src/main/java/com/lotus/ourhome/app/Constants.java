@@ -12,11 +12,6 @@ public class Constants {
     public static final String FILE_PROVIDER_AUTHORITY = "com.lotus.ourhome.fileprovider";
 
     //================= PATH ====================
-
-    public static final String PATH_DATA = App.getInstance().getCacheDir().getAbsolutePath() + File.separator + "data";
-
-    public static final String PATH_CACHE = PATH_DATA + "/NetCache";
-
     public static final String PATH_SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "codeest" + File.separator + "GeekNews";
 
     //================= PREFERENCE ====================

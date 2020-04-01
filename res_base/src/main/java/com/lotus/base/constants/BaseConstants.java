@@ -14,6 +14,7 @@ public class BaseConstants {
 	public static final String CACHE_FOLDER = BASE_HIDEN_FOLDER + "/cache";//
 	public static final String APP_FOLDER = BASE_FOLDER + "/app";
 	public static final String LOG_FOLDER = BASE_FOLDER + "/log";
+	public static final String CRASH_FOLDER = BASE_FOLDER + "/log/crash";
 	public static final String PDF_FOLDER = BASE_FOLDER + "/pdf";
 	public static final String OTHER_FOLDER = BASE_FOLDER + "/other";
 	public static final String TEXT_FOLDER = BASE_FOLDER + "/text";
