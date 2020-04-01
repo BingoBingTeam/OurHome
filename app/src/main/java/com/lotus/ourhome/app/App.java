@@ -166,7 +166,6 @@ public class App extends Application {
      * 退出登录，清楚保存的用户数据
      */
     public void logout(Activity activity){
-        CookieUtil.setAuth(false);
         CookieUtil.clearCookie();
         Intent intent = new Intent(activity, LoginActivity.class);
         activity.startActivity(intent);

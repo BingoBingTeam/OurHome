@@ -6,9 +6,9 @@ import com.lotus.base.utils.string.StringUtil;
  * 用户表
  */
 public class UserBean   extends BaseBean{
-    public static final  String PASSWORD = "password";
-    public static final  String APP_PASSWORD = "app_password";
-    public static final  String PHONE_NUMBER = "phone_number";
+    public static final  String PASSWORD = "password";//登录密码
+    public static final  String APP_PASSWORD = "app_password";//app密码锁
+    public static final  String PHONE_NUMBER = "phone_number";//手机号
 
     public static final String TABLE_NAME = "user";
     public static final String[] TABLE_COLUMN = {ID,NAME,PASSWORD,APP_PASSWORD,PHONE_NUMBER,CREATE_TIME};

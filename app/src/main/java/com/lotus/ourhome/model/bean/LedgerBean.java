@@ -7,7 +7,10 @@ import com.lotus.base.utils.string.StringUtil;
  */
 public class LedgerBean  extends BaseBean{
 
-    public static final String USER_ID = "user_id";
+    public static final String DEFAULT_LEDGER = "日常";//添加默认的日常账本
+
+    //=======================================================================================================
+    public static final String USER_ID = "user_id";//登陆者id
 
     public static final String TABLE_NAME = "ledger";
     public static final String[] TABLE_COLUMN = {ID, NAME,USER_ID, CREATE_TIME};

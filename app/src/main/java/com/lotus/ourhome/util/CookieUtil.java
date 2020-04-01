@@ -12,16 +12,35 @@ import com.lotus.ourhome.model.bean.UserBean;
 public class CookieUtil {
     private static UserBean currentUser;
 
-    public static void setRememberPsw(boolean auth) {
+    /**
+     * 保存默认显示的账本Id
+     */
+    public static void setDefaultShowLedger(String ledgerId) {
         CacheUtil cache = CacheUtil.build(App.getInstance());
-        cache.put(Constants.SP_REMEMBER_PSW, auth);
+        cache.put(Constants.SP_DEFAULT_SHOW_LEDGER, ledgerId);
     }
 
+    public static String getDefaultShowLedger() {
+        CacheUtil cache = CacheUtil.build(App.getInstance());
+        return (String)cache.get(Constants.SP_DEFAULT_SHOW_LEDGER, false);
+    }
+
+    /**
+     * 是否自动记住密码
+     */
     public static boolean getRememberPsw() {
         CacheUtil cache = CacheUtil.build(App.getInstance());
         return (boolean)cache.get(Constants.SP_REMEMBER_PSW, false);
     }
 
+    public static void setRememberPsw(boolean auth) {
+        CacheUtil cache = CacheUtil.build(App.getInstance());
+        cache.put(Constants.SP_REMEMBER_PSW, auth);
+    }
+
+    /**
+     * 是否自动登录
+     */
     public static void setAutoLogin(boolean auth) {
         CacheUtil cache = CacheUtil.build(App.getInstance());
         cache.put(Constants.SP_AUTO_LOGIN, auth);
@@ -32,6 +51,9 @@ public class CookieUtil {
         return (boolean)cache.get(Constants.SP_AUTO_LOGIN, false);
     }
 
+    /**
+     * 是否已登录
+     */
     public static void setAuth(boolean auth) {
         CacheUtil cache = CacheUtil.build(App.getInstance());
         cache.put(Constants.SP_IS_AUTH, auth);
@@ -42,6 +64,9 @@ public class CookieUtil {
         return (boolean)cache.get(Constants.SP_IS_AUTH, false);
     }
 
+    /**
+     * 保存用户信息
+     */
     public static boolean saveUserInfo(UserBean user) {
         CacheUtil cache = CacheUtil.build(App.getInstance());
         boolean result = cache.saveObj(user);
@@ -59,12 +84,18 @@ public class CookieUtil {
         return currentUser;
     }
 
+    /**
+     * 清除cookie
+     */
     public static void clearCookie() {
         CacheUtil cache = CacheUtil.build(App.getInstance());
+        setAuth(false);
+        setDefaultShowLedger("");
+        setRememberPsw(false);
+        setAutoLogin(false);
         cache.cleaAll();
         currentUser = null;
     }
-
 
     public static void put(String key, Object obj) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(App.getInstance());

@@ -1,5 +1,6 @@
 package com.lotus.ourhome.ui.user.activity;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -9,11 +10,21 @@ import android.widget.TextView;
 import com.lotus.base.widget.TitleBarLayout;
 import com.lotus.ourhome.R;
 import com.lotus.ourhome.base.SimpleActivity;
+import com.lotus.ourhome.model.bean.BillBean;
 import com.lotus.ourhome.model.bean.FamilyMemberBean;
+import com.lotus.ourhome.model.bean.GoodsSavePlaceBean;
+import com.lotus.ourhome.model.bean.GoodsTypeBean;
+import com.lotus.ourhome.model.bean.LedgerBean;
+import com.lotus.ourhome.model.bean.MoneyUseTypeBean;
 import com.lotus.ourhome.model.bean.UserBean;
 import com.lotus.ourhome.model.db.FamilyMemberBeanManager;
+import com.lotus.ourhome.model.db.GoodsSavePlaceBeanManager;
+import com.lotus.ourhome.model.db.GoodsTypeBeanManager;
+import com.lotus.ourhome.model.db.MoneyUseTypeBeanManager;
 import com.lotus.ourhome.model.db.UserBeanManager;
 import com.lotus.ourhome.util.ToastUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +49,7 @@ public class RegisterActivity extends SimpleActivity {
     @BindView(R.id.ed_phone_number)
     EditText edPhoneNumber;
 
+    private Context mContext;
     private SaveDataAsync mSaveDataAsync;
     private UserBeanManager mBeanManager;
     private FamilyMemberBeanManager mFamilyMemberBeanManager;
@@ -49,6 +61,7 @@ public class RegisterActivity extends SimpleActivity {
 
     @Override
     protected void initEventAndData() {
+        mContext = this;
         mFamilyMemberBeanManager = new FamilyMemberBeanManager(this);
         mBeanManager = new UserBeanManager(this);
 
@@ -85,12 +98,81 @@ public class RegisterActivity extends SimpleActivity {
 
         @Override
         protected Boolean doInBackground(Object... objects) {
+            String userId = data.getId();
+
+            //添加默认的家庭成员
             FamilyMemberBean bean = new FamilyMemberBean();
-            bean.setId(FamilyMemberBean.createId(data.getId()));
+            bean.setId(FamilyMemberBean.createId(userId));
             bean.setName("我");
             bean.setRemark("");
-            bean.setUserId(data.getId());
+            bean.setUserId(userId);
             bean.setCreateTime(System.currentTimeMillis());
+
+            //添加一个默认的账本
+            LedgerBeanManager ledgerBeanManager = new LedgerBeanManager(mContext);
+            LedgerBean ledgerBean = new LedgerBean();
+            ledgerBean.setUserId(userId);
+            ledgerBean.setCreateTime(System.currentTimeMillis());
+            ledgerBean.setId(LedgerBean.createId(userId));
+            ledgerBean.setName(LedgerBean.DEFAULT_LEDGER);
+            ledgerBeanManager.saveLedgerBean(ledgerBean);
+
+            //添加默认的钱的使用类别
+            MoneyUseTypeBeanManager moneyUseTypeBeanManager = new MoneyUseTypeBeanManager(mContext);
+            List<Integer> expensesIconList = MoneyUseTypeBean.getMoneyUserTypeIconList(BillBean.TYPE_EXPENSES);
+            List<String> expensesNameList = MoneyUseTypeBean.getMoneyUserTypeNameList(BillBean.TYPE_EXPENSES);
+            for (int i = 0; i < expensesIconList.size(); i++) {
+                MoneyUseTypeBean moneyUseTypeBean = new MoneyUseTypeBean();
+                moneyUseTypeBean.setId(MoneyUseTypeBean.createId(userId));
+                moneyUseTypeBean.setUserId(userId);
+                moneyUseTypeBean.setCreateTime(System.currentTimeMillis());
+                moneyUseTypeBean.setType(BillBean.TYPE_EXPENSES);
+                moneyUseTypeBean.setName(expensesNameList.get(i));
+                moneyUseTypeBean.setIcon(String.valueOf(expensesIconList.get(i)));
+                moneyUseTypeBeanManager.saveMoneyUseTypeBean(moneyUseTypeBean);
+            }
+
+            List<Integer> incomIconList = MoneyUseTypeBean.getMoneyUserTypeIconList(BillBean.TYPE_INCOME);
+            List<String> incomNameList = MoneyUseTypeBean.getMoneyUserTypeNameList(BillBean.TYPE_INCOME);
+            for (int i = 0; i < expensesIconList.size(); i++) {
+                MoneyUseTypeBean moneyUseTypeBean = new MoneyUseTypeBean();
+                moneyUseTypeBean.setId(MoneyUseTypeBean.createId(userId));
+                moneyUseTypeBean.setUserId(userId);
+                moneyUseTypeBean.setCreateTime(System.currentTimeMillis());
+                moneyUseTypeBean.setType(BillBean.TYPE_INCOME);
+                moneyUseTypeBean.setName(incomNameList.get(i));
+                moneyUseTypeBean.setIcon(String.valueOf(incomIconList.get(i)));
+                moneyUseTypeBeanManager.saveMoneyUseTypeBean(moneyUseTypeBean);
+            }
+
+            //添加默认的物品类别
+            GoodsTypeBeanManager goodsTypeBeanManager = new GoodsTypeBeanManager(mContext);
+            List<Integer> goodsTypeIconList = GoodsTypeBean.getGoodsTypeIconList();
+            List<String> goodsTypeNameList = GoodsTypeBean.getGoodsTypeNameList();
+            for (int i = 0; i < goodsTypeIconList.size(); i++) {
+                GoodsTypeBean goodsTypeBean = new GoodsTypeBean();
+                goodsTypeBean.setUserId(userId);
+                goodsTypeBean.setCreateTime(System.currentTimeMillis());
+                goodsTypeBean.setId(GoodsTypeBean.createId(userId));
+                goodsTypeBean.setName(goodsTypeNameList.get(i));
+                goodsTypeBean.setIcon(goodsTypeIconList.get(i));
+                goodsTypeBeanManager.saveGoodsType(goodsTypeBean);
+            }
+
+            //添加默认的物品保存地址
+            GoodsSavePlaceBeanManager goodsSavePlaceBeanManager = new GoodsSavePlaceBeanManager(mContext);
+            List<Integer> goodsSavePlaceIconList = GoodsSavePlaceBean.getGoodsPlaceTypeIconList();
+            List<String> goodsSavePlaceNameList = GoodsSavePlaceBean.getGoodsPlaceTypeNameList();
+            for (int i = 0; i < goodsSavePlaceIconList.size(); i++) {
+                GoodsSavePlaceBean goodsSavePlaceBean = new GoodsSavePlaceBean();
+                goodsSavePlaceBean.setUserId(userId);
+                goodsSavePlaceBean.setId(GoodsSavePlaceBean.createId(userId));
+                goodsSavePlaceBean.setCreateTime(System.currentTimeMillis());
+                goodsSavePlaceBean.setIcon(goodsSavePlaceIconList.get(i));
+                goodsSavePlaceBean.setName(goodsSavePlaceNameList.get(i));
+                goodsSavePlaceBeanManager.saveGoodsSavePlaceBean(goodsSavePlaceBean);
+            }
+
             return mFamilyMemberBeanManager.saveFamilyMember(bean) && mBeanManager.saveUserBean(data);
         }
 
@@ -117,7 +199,7 @@ public class RegisterActivity extends SimpleActivity {
         userBean.setPassword(psw);
         userBean.setName(username);
         userBean.setPhoneNumber(phone);
-        userBean.setId(UserBean.createId(username,phone));
+        userBean.setId(UserBean.createId(username, phone));
         saveData(userBean);
     }
 }

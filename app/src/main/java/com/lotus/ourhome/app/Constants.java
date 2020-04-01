@@ -33,6 +33,8 @@ public class Constants {
 
     public static final String SP_IS_AUTH = "is_auth";//是否验证了身份（用户是否登录了）
 
+    public static final String SP_DEFAULT_SHOW_LEDGER = "default_show_ledger";//默认显示的账本id
+
     //================= INTENT ====================
 
 }

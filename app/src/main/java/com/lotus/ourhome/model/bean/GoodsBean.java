@@ -6,24 +6,26 @@ import com.lotus.base.utils.string.StringUtil;
  * 物品表
  */
 public class GoodsBean extends BaseBean{
-    public static final String USER_ID = "user_id";
-    public static final String TYPE = "type";
-    public static final String FAMILY_MEMBER_ID = "family_member_id";
-    public static final String SAVE_PLACE = "save_place";
-    public static final String OWN_TIME = "own_time";//拥有的时间
+    public static final String USER_ID = "user_id";//登陆者id
+    public static final String TYPE = "type";//物品类别
+    public static final String FAMILY_MEMBER_ID = "family_member_id";//家庭成员id，即谁买的或得到的
+    public static final String SAVE_PLACE_ID = "save_place_id";//保存地址Id
+    public static final String OWN_TIME = "own_time";//拥有的时间，即购买或得到的时间
     public static final String EXPIRATION_TIME = "expiration_time";//保质截止时间
     public static final String EXPIRATION_DURATION = "expiration_duration";//保质时长
     public static final String IMAGE_PATH = "image_path";//图片地址
+    public static final String REMARK = "remark";//备注
 
     public static final String TABLE_NAME = "goods";
-    public static final String[] TABLE_COLUMN = {ID,USER_ID,NAME,TYPE,FAMILY_MEMBER_ID,SAVE_PLACE,OWN_TIME,EXPIRATION_TIME,EXPIRATION_DURATION,IMAGE_PATH,CREATE_TIME};
+    public static final String[] TABLE_COLUMN = {ID,USER_ID,NAME,TYPE,REMARK,FAMILY_MEMBER_ID,SAVE_PLACE_ID,OWN_TIME,EXPIRATION_TIME,EXPIRATION_DURATION,IMAGE_PATH,CREATE_TIME};
     public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
             + ID + " text primary key, "
             + USER_ID + " text, "
             + NAME + " text, "
             + TYPE + " text, "
+            + REMARK + " text, "
             + FAMILY_MEMBER_ID + " text, "
-            + SAVE_PLACE + " text, "
+            + SAVE_PLACE_ID + " text, "
             + OWN_TIME + " text, "
             + EXPIRATION_TIME  + " integer default 0, "
             + EXPIRATION_DURATION + " text, "
@@ -38,6 +40,7 @@ public class GoodsBean extends BaseBean{
     private long expirationTime;
     private String expirationDuration;
     private String imagePath;
+    private String remark;
 
     public static String createId(String userId) {
         StringBuilder builder = new StringBuilder();
@@ -46,6 +49,14 @@ public class GoodsBean extends BaseBean{
         builder.append(UserBean.class.getName());
         builder.append(Math.random() * 1000000);
         return builder.hashCode() + StringUtil.randomString(6);
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getType() {

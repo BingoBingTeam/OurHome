@@ -112,7 +112,6 @@ public class MoneyUserTypeFragment  extends SimpleFragment implements OnRefreshL
                     bean.setName(name);
                     bean.setIcon(String.valueOf(iconId));
                     bean.setUserId(mUserId);
-                    bean.setUseType(name);
                     bean.setType(BillBean.TYPE_EXPENSES);
                     bean.setCreateTime(System.currentTimeMillis());
                     saveData(bean);

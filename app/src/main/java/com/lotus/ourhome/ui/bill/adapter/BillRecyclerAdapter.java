@@ -66,7 +66,7 @@ public class BillRecyclerAdapter extends RecyclerView.Adapter<BillRecyclerAdapte
         FamilyMemberBean familyMemberBean = data.getFamilyMemberBean();
         String personName = "";
         if (familyMemberBean != null) {
-            personName = FamilyMemberBean.FAMILY_ID.equals(data.getHappenPerson()) ? "" : data.getFamilyMemberBean().getName();
+            personName = familyMemberBean.getName();
         }
         holder.tvRightRemark.setText(mSimpleDateFormat.format(data.getHappenTime()) + "  " +personName + "\n" + data.getRemark());
     }

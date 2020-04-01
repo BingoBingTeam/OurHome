@@ -16,15 +16,15 @@ public class BillBean extends BaseBean{
     public static final String TYPE = "type";//是收入还是支出
     public static final String MONEY = "money";
     public static final String MONEY_USE_TYPE_ID = "money_use_type_id";//对应MoneyUseTypeBean的id，即钱的来源或使用来别
-    public static final String REMARK = "remark";
-    public static final String HAPPEN_PERSON = "happen_person";//使用者，即谁用的这笔钱
-    public static final String HAPPEN_TIME = "happen_time";//发生时间
-    public static final String HAPPEN_TIME_YEAR = "happen_time_year";
-    public static final String HAPPEN_TIME_MONTH = "happen_time_month";
-    public static final String HAPPEN_TIME_DAY = "happen_time_day";
+    public static final String REMARK = "remark";//备注
+    public static final String FAMILY_MEMBER_ID = "family_member_id";//使用者ID，即谁用的这笔钱
+    public static final String HAPPEN_TIME = "happen_time";// 此笔消费或收入产生的时间
+    public static final String HAPPEN_TIME_YEAR = "happen_time_year";//此笔消费或收入产生的时间 -年
+    public static final String HAPPEN_TIME_MONTH = "happen_time_month";//此笔消费或收入产生的时间 -月
+    public static final String HAPPEN_TIME_DAY = "happen_time_day";//此笔消费或收入产生的时间 -日
 
     public static final String TABLE_NAME = "bill";
-    public static final String[] TABLE_COLUMN = {ID,LEDGER_ID,USER_ID,TYPE,NAME,MONEY,MONEY_USE_TYPE_ID,REMARK,HAPPEN_PERSON,
+    public static final String[] TABLE_COLUMN = {ID,LEDGER_ID,USER_ID,TYPE,NAME,MONEY,MONEY_USE_TYPE_ID,REMARK,FAMILY_MEMBER_ID,
             HAPPEN_TIME,HAPPEN_TIME_YEAR,HAPPEN_TIME_MONTH,HAPPEN_TIME_DAY,CREATE_TIME};
     public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
             + ID + " text primary key, "
@@ -35,7 +35,7 @@ public class BillBean extends BaseBean{
             + MONEY + " text, "
             + MONEY_USE_TYPE_ID + " text, "
             + REMARK + " text, "
-            + HAPPEN_PERSON + " text, "
+            + FAMILY_MEMBER_ID + " text, "
             + HAPPEN_TIME + " integer default 0, "
             + HAPPEN_TIME_YEAR + " integer default 0, "
             + HAPPEN_TIME_MONTH + " integer default 0, "

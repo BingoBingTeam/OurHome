@@ -198,12 +198,13 @@ public class AddBillFragment extends SimpleFragment {
             return;
         }
         BillBean billBean = new BillBean();
+        billBean.setLedgerId(CookieUtil.getDefaultShowLedger());
         billBean.setId(BillBean.createId(mUserId, mUserName));
         billBean.setType(mType);
         billBean.setUserId(mUserId);
         billBean.setMoney(money);
         billBean.setMoneyUseTypeId(mSelectedMoneyUseTypeBean.getId());
-        billBean.setHappenPerson(mSelectedFamilyMemberBean == null ? FamilyMemberBean.FAMILY_ID : mSelectedFamilyMemberBean.getId());
+        billBean.setHappenPerson(mSelectedFamilyMemberBean == null ? "" : mSelectedFamilyMemberBean.getId());
         billBean.setHappenTime(mHappenTime);
         billBean.setRemark(edDescription.getText().toString().trim());
         billBean.setMoneyUseTypeBean(mSelectedMoneyUseTypeBean);

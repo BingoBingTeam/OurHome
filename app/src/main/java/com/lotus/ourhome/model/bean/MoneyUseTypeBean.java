@@ -13,25 +13,22 @@ import java.util.List;
  */
 public class MoneyUseTypeBean extends BaseBean{
 
-    public static final  String TYPE = "type";//区别是收入、还是支出
-    public static final  String USE_TYPE = "use_type";//用作什么的钱，或者来源是什么
-    public static final  String ICON = "icon";
-    public static final  String USER_ID = "user_id";
+    public static final  String TYPE = "type";//区别是属于收入、还是支出的
+    public static final  String ICON = "icon";//图标
+    public static final  String USER_ID = "user_id";//登录用户id
 
     public static final String TABLE_NAME = "bill_type";
-    public static final String[] TABLE_COLUMN = {ID,NAME,ICON,USE_TYPE,CREATE_TIME,USER_ID};
+    public static final String[] TABLE_COLUMN = {ID,NAME,ICON,CREATE_TIME,USER_ID};
     public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
             + ID + " text primary key, "
             + NAME + " text, "
             + TYPE + " text, "
-            + USE_TYPE + " text, "
             + ICON + " text, "
             + USER_ID + " text, "
             + CREATE_TIME + " integer default 0"
             + ")";
     //=======================================================================================================
     private String type;
-    private String useType;
     private String icon;
     private String userId;
 
@@ -42,14 +39,6 @@ public class MoneyUseTypeBean extends BaseBean{
         builder.append(UserBean.class.getName());
         builder.append(Math.random() * 1000000);
         return builder.hashCode() + StringUtil.randomString(6);
-    }
-
-    public String getUseType() {
-        return useType;
-    }
-
-    public void setUseType(String useType) {
-        this.useType = useType;
     }
 
     public String getUserId() {
@@ -120,6 +109,52 @@ public class MoneyUseTypeBean extends BaseBean{
             list.add(R.mipmap.ic_bedroom);
             list.add(R.mipmap.ic_balcony);
             list.add(R.mipmap.ic_wc);
+        }
+        return list;
+    }
+
+    public static List<String> getMoneyUserTypeNameList(String type){
+        List<String> list = new ArrayList<>();
+        list.add("存钱");
+        list.add("预支");
+        list.add("一般");
+        list.add("标记");
+        list.add("红包");
+        list.add("钱包");
+        list.add("日常");
+        list.add("通用");
+        if(BillBean.TYPE_EXPENSES.equals(type)){
+            list.add("交通");
+            list.add("外卖");
+            list.add("零食");
+            list.add("维修");
+            list.add("娱乐");
+            list.add("电子设备");
+            list.add("宠物");
+            list.add("医疗");
+            list.add("护肤");
+            list.add("学习");
+            list.add("房子");
+            list.add("礼物");
+            list.add("日用品");
+            list.add("游戏");
+            list.add("家具");
+            list.add("水果");
+            list.add("食材");
+            list.add("健身");
+            list.add("用餐");
+            list.add("服饰");
+            list.add("通讯");
+            list.add("孩子");
+            list.add("车子");
+            list.add("育儿");
+            list.add("丽人");
+            list.add("银行");
+            list.add("钱包");
+            list.add("厨房");
+            list.add("卧室");
+            list.add("阳台");
+            list.add("卫生间");
         }
         return list;
     }

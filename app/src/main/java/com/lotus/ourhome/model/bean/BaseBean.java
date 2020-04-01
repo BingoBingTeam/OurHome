@@ -3,9 +3,9 @@ package com.lotus.ourhome.model.bean;
 import java.io.Serializable;
 
 public class BaseBean implements Serializable {
-    public static final  String ID = "id";
-    public static final  String NAME = "name";
-    public static final  String CREATE_TIME = "create_time";
+    public static final  String ID = "id";//id
+    public static final  String NAME = "name";//名称
+    public static final  String CREATE_TIME = "create_time";//创建时间
 
     private String id;
     private String name;

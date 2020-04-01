@@ -25,13 +25,14 @@ public class GoodsSavePlaceBeanManager  extends BaseDataManager {
         ContentValues values = new ContentValues();
         values.put(GoodsSavePlaceBean.ID, goodsSavePlaceBean.getId());
         values.put(GoodsSavePlaceBean.USER_ID, goodsSavePlaceBean.getUserId());
+        values.put(GoodsSavePlaceBean.ICON, goodsSavePlaceBean.getIcon());
         values.put(GoodsSavePlaceBean.NAME, goodsSavePlaceBean.getName());
         values.put(GoodsSavePlaceBean.CREATE_TIME, goodsSavePlaceBean.getCreateTime());
         open();
         return sqLiteDatabase.replace(GoodsSavePlaceBean.TABLE_NAME, null, values) != -1;
     }
 
-    public GoodsSavePlaceBean getFamilyMemberById(String id) {
+    public GoodsSavePlaceBean getGoodsSavePlaceById(String id) {
         String selection = GoodsSavePlaceBean.ID + "=?";
         String[] selectionArgs = {id};
         List<GoodsSavePlaceBean> familyMemberBeanList = getGoodsSavePlaceList(selection, selectionArgs, null, null, null, null);
@@ -49,7 +50,7 @@ public class GoodsSavePlaceBeanManager  extends BaseDataManager {
 
         Cursor cursor = queryGoodsSavePlaceBean(selection, selectionArgs, groupBy, having, orderBy, limit);
         while (cursor != null && cursor.moveToNext()) {
-            familyMemberBeanList.add(getFamilyMemberBean(GoodsSavePlaceBean.TABLE_COLUMN, cursor));
+            familyMemberBeanList.add(getGoodsSavePlaceBean(GoodsSavePlaceBean.TABLE_COLUMN, cursor));
         }
         if (cursor != null) {
             cursor.close();
@@ -62,7 +63,7 @@ public class GoodsSavePlaceBeanManager  extends BaseDataManager {
         return sqLiteDatabase.query(GoodsSavePlaceBean.TABLE_NAME, GoodsSavePlaceBean.TABLE_COLUMN, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
-    public GoodsSavePlaceBean getFamilyMemberBean(String[] clounms, Cursor cursor) {
+    public GoodsSavePlaceBean getGoodsSavePlaceBean(String[] clounms, Cursor cursor) {
         GoodsSavePlaceBean goodsSavePlaceBean = new GoodsSavePlaceBean();
         if (ArrayUtils.contains(clounms, GoodsSavePlaceBean.ID)) {
             goodsSavePlaceBean.setId(cursor.getString(cursor.getColumnIndexOrThrow(GoodsSavePlaceBean.ID)));
@@ -72,6 +73,9 @@ public class GoodsSavePlaceBeanManager  extends BaseDataManager {
         }
         if (ArrayUtils.contains(clounms, GoodsSavePlaceBean.USER_ID)) {
             goodsSavePlaceBean.setUserId(cursor.getString(cursor.getColumnIndexOrThrow(GoodsSavePlaceBean.USER_ID)));
+        }
+        if (ArrayUtils.contains(clounms, GoodsSavePlaceBean.ICON)) {
+            goodsSavePlaceBean.setIcon(cursor.getString(cursor.getColumnIndexOrThrow(GoodsSavePlaceBean.ICON)));
         }
         if (ArrayUtils.contains(clounms, GoodsSavePlaceBean.CREATE_TIME)) {
             goodsSavePlaceBean.setCreateTime(cursor.getLong(cursor.getColumnIndexOrThrow(GoodsSavePlaceBean.CREATE_TIME)));

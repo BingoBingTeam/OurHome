@@ -28,7 +28,6 @@ public class MoneyUseTypeBeanManager extends BaseDataManager {
         values.put(MoneyUseTypeBean.ICON, moneyUseTypeBean.getIcon());
         values.put(MoneyUseTypeBean.USER_ID, moneyUseTypeBean.getUserId());
         values.put(MoneyUseTypeBean.TYPE, moneyUseTypeBean.getType());
-        values.put(MoneyUseTypeBean.USE_TYPE, moneyUseTypeBean.getUseType());
         values.put(MoneyUseTypeBean.CREATE_TIME, moneyUseTypeBean.getCreateTime());
         open();
         return sqLiteDatabase.replace(MoneyUseTypeBean.TABLE_NAME, null, values) != -1;
@@ -91,9 +90,6 @@ public class MoneyUseTypeBeanManager extends BaseDataManager {
         }
         if (ArrayUtils.contains(clounms, MoneyUseTypeBean.USER_ID)) {
             moneyUseTypeBean.setUserId(cursor.getString(cursor.getColumnIndexOrThrow(MoneyUseTypeBean.USER_ID)));
-        }
-        if (ArrayUtils.contains(clounms, MoneyUseTypeBean.USE_TYPE)) {
-            moneyUseTypeBean.setUseType(cursor.getString(cursor.getColumnIndexOrThrow(MoneyUseTypeBean.USE_TYPE)));
         }
         if (ArrayUtils.contains(clounms, MoneyUseTypeBean.CREATE_TIME)) {
             moneyUseTypeBean.setCreateTime(cursor.getLong(cursor.getColumnIndexOrThrow(MoneyUseTypeBean.CREATE_TIME)));

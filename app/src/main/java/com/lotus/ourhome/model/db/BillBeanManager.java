@@ -36,7 +36,7 @@ public class BillBeanManager extends BaseDataManager {
         values.put(BillBean.MONEY, billBean.getMoney());
         values.put(BillBean.MONEY_USE_TYPE_ID, billBean.getMoneyUseTypeId());
         values.put(BillBean.REMARK, billBean.getRemark());
-        values.put(BillBean.HAPPEN_PERSON, billBean.getHappenPerson());
+        values.put(BillBean.FAMILY_MEMBER_ID, billBean.getHappenPerson());
         values.put(BillBean.HAPPEN_TIME, billBean.getHappenTime());
         values.put(BillBean.HAPPEN_TIME_YEAR, billBean.getHappenTimeYear());
         values.put(BillBean.HAPPEN_TIME_MONTH, billBean.getHappenTimeMonth());
@@ -46,15 +46,15 @@ public class BillBeanManager extends BaseDataManager {
         return sqLiteDatabase.replace(BillBean.TABLE_NAME, null, values) != -1;
     }
 
-    public List<BillBean> getBillList(String ledgerId) {
-        String selection = BillBean.LEDGER_ID + "=?";
-        String[] selectionArgs = {ledgerId};
+    public List<BillBean> getBillList(String ledgerId,String userId) {
+        String selection = BillBean.LEDGER_ID + "=?" + " and " + BillBean.USER_ID + "=?" ;
+        String[] selectionArgs = {ledgerId,userId};
         return getBillList(selection, selectionArgs, null, null, null, null);
     }
 
-    public List<BillBean> getBillListByUserIdAndHappenTime(String userId, long useTime) {
-        String selection = BillBean.USER_ID + "=?";
-        String[] selectionArgs = {userId};
+    public List<BillBean> getBillListByUserIdAndHappenTime(String ledgerId,String userId, long useTime) {
+        String selection = BillBean.LEDGER_ID + "=?" + " and " + BillBean.USER_ID + "=?" ;
+        String[] selectionArgs = {ledgerId,userId};
 
         if (useTime > 0) {
             selection += " and " + BillBean.HAPPEN_TIME + "=?";
@@ -63,9 +63,9 @@ public class BillBeanManager extends BaseDataManager {
         return getBillList(selection, selectionArgs, null, null, null, null);
     }
 
-    public List<BillBean> getBillListToCurrentTime(String userId, long currentTime) {
-        String selection = BillBean.USER_ID + "=?";
-        String[] selectionArgs = {userId};
+    public List<BillBean> getBillListToCurrentTime(String ledgerId,String userId, long currentTime) {
+        String selection = BillBean.LEDGER_ID + "=?" + " and " + BillBean.USER_ID + "=?" ;
+        String[] selectionArgs = {ledgerId,userId};
 
         if (currentTime > 0) {
             selection += " and " + BillBean.HAPPEN_TIME + "<=? order by " + BillBean.HAPPEN_TIME +" desc";
@@ -126,8 +126,8 @@ public class BillBeanManager extends BaseDataManager {
         if (ArrayUtils.contains(clounms, BillBean.REMARK)) {
             billBean.setRemark(cursor.getString(cursor.getColumnIndexOrThrow(BillBean.REMARK)));
         }
-        if (ArrayUtils.contains(clounms, BillBean.HAPPEN_PERSON)) {
-            billBean.setHappenPerson(cursor.getString(cursor.getColumnIndexOrThrow(BillBean.HAPPEN_PERSON)));
+        if (ArrayUtils.contains(clounms, BillBean.FAMILY_MEMBER_ID)) {
+            billBean.setHappenPerson(cursor.getString(cursor.getColumnIndexOrThrow(BillBean.FAMILY_MEMBER_ID)));
         }
         if (ArrayUtils.contains(clounms, BillBean.HAPPEN_TIME)) {
             billBean.setHappenTime(cursor.getLong(cursor.getColumnIndexOrThrow(BillBean.HAPPEN_TIME)));

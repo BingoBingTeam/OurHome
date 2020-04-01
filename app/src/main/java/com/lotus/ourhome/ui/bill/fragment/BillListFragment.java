@@ -127,7 +127,7 @@ public class BillListFragment extends SimpleFragment implements OnRefreshListene
 
         @Override
         protected List<BillBean> doInBackground(Object... objects) {
-            return mBillBeanManager.getBillListToCurrentTime(mUserId, System.currentTimeMillis());
+            return mBillBeanManager.getBillListToCurrentTime(CookieUtil.getDefaultShowLedger(),mUserId, System.currentTimeMillis());
         }
 
         @Override

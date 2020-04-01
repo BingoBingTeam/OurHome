@@ -133,7 +133,7 @@ public class GoodsTypeFragment  extends SimpleFragment implements OnRefreshListe
 
         @Override
         protected List<GoodsTypeBean> doInBackground(Object... objects) {
-            return mBeanManager.getGoodsTypeListByType(mUserId);
+            return mBeanManager.getGoodsTypeListByUserId(mUserId);
         }
 
         @Override

@@ -11,6 +11,7 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -25,8 +26,16 @@ import android.widget.TextView;
 import com.lotus.ourhome.R;
 import com.lotus.ourhome.app.App;
 import com.lotus.ourhome.base.SimpleActivity;
+import com.lotus.ourhome.model.bean.BillBean;
+import com.lotus.ourhome.model.bean.FamilyMemberBean;
+import com.lotus.ourhome.model.bean.GoodsSavePlaceBean;
 import com.lotus.ourhome.model.bean.GoodsTypeBean;
+import com.lotus.ourhome.model.bean.LedgerBean;
+import com.lotus.ourhome.model.bean.MoneyUseTypeBean;
 import com.lotus.ourhome.model.bean.UserBean;
+import com.lotus.ourhome.model.db.GoodsSavePlaceBeanManager;
+import com.lotus.ourhome.model.db.GoodsTypeBeanManager;
+import com.lotus.ourhome.model.db.MoneyUseTypeBeanManager;
 import com.lotus.ourhome.model.db.UserBeanManager;
 import com.lotus.ourhome.ui.main.activity.MainActivity;
 import com.lotus.ourhome.util.CookieUtil;
@@ -39,6 +48,7 @@ import org.apache.commons.lang.StringUtils;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.views.SweetAlertDialog;
 
@@ -65,10 +75,12 @@ public class LoginActivity extends SimpleActivity {
     @BindView(R.id.check_remember_psw)
     CheckBox checkRememberPsw;
 
+    private Context mContext;
     private UserBean mUserBean;
     private QueryDataAsync mQueryDataAsync;
     private PermissionUtil mPermissionUtil;
     private UserBeanManager mBeanManager;
+    private SaveDataAsync mSaveDataAsync;
 
     @Override
     protected int setLayout() {
@@ -77,6 +89,7 @@ public class LoginActivity extends SimpleActivity {
 
     @Override
     protected void initEventAndData() {
+        mContext = this;
         mBeanManager = new UserBeanManager(this);
         judgePermission();
         checkAutoLogin.setChecked(CookieUtil.getAutoLogin());
@@ -177,10 +190,130 @@ public class LoginActivity extends SimpleActivity {
                 CookieUtil.setAutoLogin(checkAutoLogin.isChecked());
                 CookieUtil.setRememberPsw(checkRememberPsw.isChecked());
                 CookieUtil.saveUserInfo(result);
-                jumpToMain();
-            }else {
+                saveData(result.getId());
+            } else {
                 ToastUtil.longShow(LoginActivity.this, "登陆失败,用户名或密码不匹配");
             }
+        }
+    }
+
+
+    private void saveData(String userId) {
+        if (mSaveDataAsync != null) {
+            mSaveDataAsync.cancel(true);
+        }
+        mSaveDataAsync = new SaveDataAsync(userId);
+        mSaveDataAsync.execute(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private class SaveDataAsync extends AsyncTask<Object, Integer, Boolean> {
+        String userId = "";
+
+        private SaveDataAsync(String userId) {
+            this.userId = userId;
+        }
+
+        @Override
+        protected Boolean doInBackground(Object... objects) {
+            //若无数据，添加默认的家庭成员
+            FamilyMemberBeanManager mFamilyMemberBeanManager = new FamilyMemberBean();
+            List<FamilyMemberBean> familyMemberBeanList = mFamilyMemberBeanManager.getFamilyMemberByUserId(userId);
+            if (familyMemberBeanList == null || familyMemberBeanList.size() == 0) {
+                FamilyMemberBean bean = new FamilyMemberBean();
+                bean.setId(FamilyMemberBean.createId(userId));
+                bean.setName("我");
+                bean.setRemark("");
+                bean.setUserId(userId);
+                bean.setCreateTime(System.currentTimeMillis());
+                mFamilyMemberBeanManager.saveFamilyMember(bean);
+            }
+
+            //若无数据，添加一个默认的账本
+            LedgerBeanManager ledgerBeanManager = new LedgerBeanManager(mContext);
+            List<LedgerBean> ledgerBeanList = ledgerBeanManager.getLedgerByUserIdAndUserName(userId);
+            if (ledgerBeanList == null || ledgerBeanList.size() == 0) {
+                LedgerBean ledgerBean = new LedgerBean();
+                ledgerBean.setUserId(userId);
+                ledgerBean.setCreateTime(System.currentTimeMillis());
+                ledgerBean.setId(LedgerBean.createId(userId));
+                ledgerBean.setName(LedgerBean.DEFAULT_LEDGER);
+                ledgerBeanManager.saveLedgerBean(ledgerBean);
+                CookieUtil.setDefaultShowLedger(ledgerBean.getId());//保存默认显示的账本id
+            }
+
+            //若无数据，添加默认的钱的使用类别
+            MoneyUseTypeBeanManager moneyUseTypeBeanManager = new MoneyUseTypeBeanManager(mContext);
+            List<MoneyUseTypeBean> expensesMoneyUseTypeBeanList = moneyUseTypeBeanManager.getMoneyUseTypeByUserIdAndType(userId, BillBean.TYPE_EXPENSES);
+            if (expensesMoneyUseTypeBeanList == null || expensesMoneyUseTypeBeanList.size() == 0) {
+                List<Integer> expensesIconList = MoneyUseTypeBean.getMoneyUserTypeIconList(BillBean.TYPE_EXPENSES);
+                List<String> expensesNameList = MoneyUseTypeBean.getMoneyUserTypeNameList(BillBean.TYPE_EXPENSES);
+                for (int i = 0; i < expensesIconList.size(); i++) {
+                    MoneyUseTypeBean moneyUseTypeBean = new MoneyUseTypeBean();
+                    moneyUseTypeBean.setId(MoneyUseTypeBean.createId(userId));
+                    moneyUseTypeBean.setUserId(userId);
+                    moneyUseTypeBean.setCreateTime(System.currentTimeMillis());
+                    moneyUseTypeBean.setType(BillBean.TYPE_EXPENSES);
+                    moneyUseTypeBean.setName(expensesNameList.get(i));
+                    moneyUseTypeBean.setIcon(String.valueOf(expensesIconList.get(i)));
+                    moneyUseTypeBeanManager.saveMoneyUseTypeBean(moneyUseTypeBean);
+                }
+            }
+            List<MoneyUseTypeBean> incomeMoneyUseTypeBeanList = moneyUseTypeBeanManager.getMoneyUseTypeByUserIdAndType(userId, BillBean.TYPE_INCOME);
+            if (incomeMoneyUseTypeBeanList == null || incomeMoneyUseTypeBeanList.size() == 0) {
+                List<Integer> incomeIconList = MoneyUseTypeBean.getMoneyUserTypeIconList(BillBean.TYPE_INCOME);
+                List<String> incomeNameList = MoneyUseTypeBean.getMoneyUserTypeNameList(BillBean.TYPE_INCOME);
+                for (int i = 0; i < incomeIconList.size(); i++) {
+                    MoneyUseTypeBean moneyUseTypeBean = new MoneyUseTypeBean();
+                    moneyUseTypeBean.setId(MoneyUseTypeBean.createId(userId));
+                    moneyUseTypeBean.setUserId(userId);
+                    moneyUseTypeBean.setCreateTime(System.currentTimeMillis());
+                    moneyUseTypeBean.setType(BillBean.TYPE_INCOME);
+                    moneyUseTypeBean.setName(incomeNameList.get(i));
+                    moneyUseTypeBean.setIcon(String.valueOf(incomeIconList.get(i)));
+                    moneyUseTypeBeanManager.saveMoneyUseTypeBean(moneyUseTypeBean);
+                }
+            }
+
+            //若无数据，添加默认的物品类别
+            GoodsTypeBeanManager goodsTypeBeanManager = new GoodsTypeBeanManager(mContext);
+            List<GoodsTypeBean> goodsTypeBeanList = goodsTypeBeanManager.getGoodsTypeListByUserId(userId);
+            if (goodsTypeBeanList == null || goodsTypeBeanList.size() == 0) {
+                List<Integer> goodsTypeIconList = GoodsTypeBean.getGoodsTypeIconList();
+                List<String> goodsTypeNameList = GoodsTypeBean.getGoodsTypeNameList();
+                for (int i = 0; i < goodsTypeIconList.size(); i++) {
+                    GoodsTypeBean goodsTypeBean = new GoodsTypeBean();
+                    goodsTypeBean.setUserId(userId);
+                    goodsTypeBean.setCreateTime(System.currentTimeMillis());
+                    goodsTypeBean.setId(GoodsTypeBean.createId(userId));
+                    goodsTypeBean.setName(goodsTypeNameList.get(i));
+                    goodsTypeBean.setIcon(goodsTypeIconList.get(i));
+                    goodsTypeBeanManager.saveGoodsType(goodsTypeBean);
+                }
+            }
+
+            //若无数据，添加默认的物品保存地址
+            GoodsSavePlaceBeanManager goodsSavePlaceBeanManager = new GoodsSavePlaceBeanManager(mContext);
+            List<GoodsSavePlaceBean> goodsSavePlaceBeanList = goodsSavePlaceBeanManager.getGoodsSavePlaceListByUserId(userId);
+            if (goodsSavePlaceBeanList == null || goodsSavePlaceBeanList.size() == 0) {
+                List<Integer> goodsSavePlaceIconList = GoodsSavePlaceBean.getGoodsPlaceTypeIconList();
+                List<String> goodsSavePlaceNameList = GoodsSavePlaceBean.getGoodsPlaceTypeNameList();
+                for (int i = 0; i < goodsSavePlaceIconList.size(); i++) {
+                    GoodsSavePlaceBean goodsSavePlaceBean = new GoodsSavePlaceBean();
+                    goodsSavePlaceBean.setUserId(userId);
+                    goodsSavePlaceBean.setId(GoodsSavePlaceBean.createId(userId));
+                    goodsSavePlaceBean.setCreateTime(System.currentTimeMillis());
+                    goodsSavePlaceBean.setIcon(goodsSavePlaceIconList.get(i));
+                    goodsSavePlaceBean.setName(goodsSavePlaceNameList.get(i));
+                    goodsSavePlaceBeanManager.saveGoodsSavePlaceBean(goodsSavePlaceBean);
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            jumpToMain();
         }
     }
 

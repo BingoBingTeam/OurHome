@@ -27,12 +27,13 @@ public class GoodsBeanManager extends BaseDataManager {
         values.put(GoodsBean.USER_ID, goodsBean.getUserId());
         values.put(GoodsBean.TYPE, goodsBean.getType());
         values.put(GoodsBean.FAMILY_MEMBER_ID, goodsBean.getFamilyMemberId());
-        values.put(GoodsBean.SAVE_PLACE, goodsBean.getSavePlace());
+        values.put(GoodsBean.SAVE_PLACE_ID, goodsBean.getSavePlace());
         values.put(GoodsBean.OWN_TIME, goodsBean.getOwnTime());
         values.put(GoodsBean.EXPIRATION_TIME, goodsBean.getExpirationTime());
         values.put(GoodsBean.EXPIRATION_DURATION, goodsBean.getExpirationDuration());
         values.put(GoodsBean.IMAGE_PATH, goodsBean.getImagePath());
         values.put(GoodsBean.NAME, goodsBean.getName());
+        values.put(GoodsBean.REMARK, goodsBean.getRemark());
         values.put(GoodsBean.CREATE_TIME, goodsBean.getCreateTime());
         open();
         return sqLiteDatabase.replace(GoodsBean.TABLE_NAME, null, values) != -1;
@@ -77,6 +78,9 @@ public class GoodsBeanManager extends BaseDataManager {
         if (ArrayUtils.contains(clounms, GoodsBean.NAME)) {
             goodsBean.setName(cursor.getString(cursor.getColumnIndexOrThrow(GoodsBean.NAME)));
         }
+        if (ArrayUtils.contains(clounms, GoodsBean.REMARK)) {
+            goodsBean.setRemark(cursor.getString(cursor.getColumnIndexOrThrow(GoodsBean.REMARK)));
+        }
         if (ArrayUtils.contains(clounms, GoodsBean.USER_ID)) {
             goodsBean.setUserId(cursor.getString(cursor.getColumnIndexOrThrow(GoodsBean.USER_ID)));
         }
@@ -89,8 +93,8 @@ public class GoodsBeanManager extends BaseDataManager {
         if (ArrayUtils.contains(clounms, GoodsBean.FAMILY_MEMBER_ID)) {
             goodsBean.setFamilyMemberId(cursor.getString(cursor.getColumnIndexOrThrow(GoodsBean.FAMILY_MEMBER_ID)));
         }
-        if (ArrayUtils.contains(clounms, GoodsBean.SAVE_PLACE)) {
-            goodsBean.setSavePlace(cursor.getString(cursor.getColumnIndexOrThrow(GoodsBean.SAVE_PLACE)));
+        if (ArrayUtils.contains(clounms, GoodsBean.SAVE_PLACE_ID)) {
+            goodsBean.setSavePlace(cursor.getString(cursor.getColumnIndexOrThrow(GoodsBean.SAVE_PLACE_ID)));
         }
         if (ArrayUtils.contains(clounms, GoodsBean.EXPIRATION_DURATION)) {
             goodsBean.setExpirationDuration(cursor.getString(cursor.getColumnIndexOrThrow(GoodsBean.EXPIRATION_DURATION)));

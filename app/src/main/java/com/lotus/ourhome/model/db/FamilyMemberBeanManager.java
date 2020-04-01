@@ -7,6 +7,7 @@ import android.database.Cursor;
 import com.lotus.ourhome.model.bean.FamilyMemberBean;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,9 @@ public class FamilyMemberBeanManager extends BaseDataManager {
     }
 
     public FamilyMemberBean getFamilyMemberById(String id) {
+        if(StringUtils.isEmpty(id)){
+            return null;
+        }
         String selection = FamilyMemberBean.ID + "=?";
         String[] selectionArgs = {id};
         List<FamilyMemberBean> familyMemberBeanList = getFamilyMemberList(selection, selectionArgs, null, null, null, null);

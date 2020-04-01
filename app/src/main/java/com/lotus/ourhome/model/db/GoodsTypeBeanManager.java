@@ -21,11 +21,12 @@ public class GoodsTypeBeanManager   extends BaseDataManager {
     /**
      * 保存
      */
-    public boolean saveGoods(GoodsTypeBean goodsTypeBean) {
+    public boolean saveGoodsType(GoodsTypeBean goodsTypeBean) {
         ContentValues values = new ContentValues();
         values.put(GoodsTypeBean.ID, goodsTypeBean.getId());
         values.put(GoodsTypeBean.USER_ID, goodsTypeBean.getUserId());
         values.put(GoodsTypeBean.NAME, goodsTypeBean.getName());
+        values.put(GoodsTypeBean.ICON, goodsTypeBean.getIcon());
         values.put(GoodsTypeBean.CREATE_TIME, goodsTypeBean.getCreateTime());
         open();
         return sqLiteDatabase.replace(GoodsTypeBean.TABLE_NAME, null, values) != -1;
@@ -34,22 +35,22 @@ public class GoodsTypeBeanManager   extends BaseDataManager {
     public GoodsTypeBean getGoodsTypeById(String id) {
         String selection = GoodsTypeBean.ID + "=?";
         String[] selectionArgs = {id};
-        List<GoodsTypeBean> familyMemberBeanList = getFamilyMemberList(selection, selectionArgs, null, null, null, null);
+        List<GoodsTypeBean> familyMemberBeanList = getGoodsTypeList(selection, selectionArgs, null, null, null, null);
         return familyMemberBeanList.size() > 0 ? familyMemberBeanList.get(0) : null;
     }
 
-    public List<GoodsTypeBean> getGoodsTypeListByType(String userId) {
+    public List<GoodsTypeBean> getGoodsTypeListByUserId(String userId) {
         String selection = GoodsTypeBean.USER_ID + "=?" ;
         String[] selectionArgs = {userId};
-        return getFamilyMemberList(selection, selectionArgs, null, null, null, null);
+        return getGoodsTypeList(selection, selectionArgs, null, null, null, null);
     }
 
-    public List<GoodsTypeBean> getFamilyMemberList(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+    public List<GoodsTypeBean> getGoodsTypeList(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
         List<GoodsTypeBean> familyMemberBeanList = new ArrayList<GoodsTypeBean>();
 
-        Cursor cursor = queryFamilyMemberBean(selection, selectionArgs, groupBy, having, orderBy, limit);
+        Cursor cursor = queryGoodsTypeBean(selection, selectionArgs, groupBy, having, orderBy, limit);
         while (cursor != null && cursor.moveToNext()) {
-            familyMemberBeanList.add(getFamilyMemberBean(GoodsTypeBean.TABLE_COLUMN, cursor));
+            familyMemberBeanList.add(getGoodsTypeBean(GoodsTypeBean.TABLE_COLUMN, cursor));
         }
         if (cursor != null) {
             cursor.close();
@@ -57,18 +58,21 @@ public class GoodsTypeBeanManager   extends BaseDataManager {
         return familyMemberBeanList;
     }
 
-    public Cursor queryFamilyMemberBean(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+    public Cursor queryGoodsTypeBean(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
         open();
         return sqLiteDatabase.query(GoodsTypeBean.TABLE_NAME, GoodsTypeBean.TABLE_COLUMN, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
-    public GoodsTypeBean getFamilyMemberBean(String[] clounms, Cursor cursor) {
+    public GoodsTypeBean getGoodsTypeBean(String[] clounms, Cursor cursor) {
         GoodsTypeBean goodsTypeBean = new GoodsTypeBean();
         if (ArrayUtils.contains(clounms, GoodsTypeBean.ID)) {
             goodsTypeBean.setId(cursor.getString(cursor.getColumnIndexOrThrow(GoodsTypeBean.ID)));
         }
         if (ArrayUtils.contains(clounms, GoodsTypeBean.NAME)) {
             goodsTypeBean.setName(cursor.getString(cursor.getColumnIndexOrThrow(GoodsTypeBean.NAME)));
+        }
+        if (ArrayUtils.contains(clounms, GoodsTypeBean.ICON)) {
+            goodsTypeBean.setIcon(cursor.getString(cursor.getColumnIndexOrThrow(GoodsTypeBean.ICON)));
         }
         if (ArrayUtils.contains(clounms, GoodsTypeBean.USER_ID)) {
             goodsTypeBean.setUserId(cursor.getString(cursor.getColumnIndexOrThrow(GoodsTypeBean.USER_ID)));
