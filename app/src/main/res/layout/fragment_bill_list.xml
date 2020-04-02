@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_indicator_more"/>
         <TextView
+            android:id="@+id/tv_ledger_name"
             android:text="当前账本名称"
             android:textColor="@color/white"
             android:textSize="@dimen/normal_size"

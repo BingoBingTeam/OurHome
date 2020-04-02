@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.lotus.ourhome.R;
 import com.lotus.ourhome.base.SimpleFragment;
 import com.lotus.ourhome.model.bean.BillBean;
+import com.lotus.ourhome.model.bean.LedgerBean;
 import com.lotus.ourhome.model.db.BillBeanManager;
+import com.lotus.ourhome.model.db.LedgerBeanManager;
 import com.lotus.ourhome.ui.bill.adapter.BillRecyclerAdapter;
 import com.lotus.ourhome.ui.main.fragment.MainFragment;
 import com.lotus.ourhome.util.CookieUtil;
@@ -30,7 +32,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -52,11 +53,16 @@ public class BillListFragment extends SimpleFragment implements OnRefreshListene
     RelativeLayout rlNoData;
     @BindView(R.id.layout_refresh)
     SmartRefreshLayout layoutRefresh;
+    @BindView(R.id.tv_ledger_name)
+    TextView tvLedgerName;
 
+    private LedgerBean mLedgerBean = null;
+    private LedgerBeanManager ledgerBeanManager;
     private BillRecyclerAdapter mAdapter;
     private BillBeanManager mBillBeanManager;
     private String mUserId = "";
     private QueryListDataAsync mQueryListDataAsync;
+    private String mLedgerId = "";
 
     public static BillListFragment newInstance() {
         Bundle args = new Bundle();
@@ -77,9 +83,19 @@ public class BillListFragment extends SimpleFragment implements OnRefreshListene
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnDataChanged(BillBean mode) {
+    public void OnDataChanged(BillBean mode) {//新增了账单
         if (mode != null) {
-            if(mode.getId() != null && mode.getId().length() > 0){
+            if (mode.getId() != null && mode.getId().length() > 0) {
+                onRefresh(layoutRefresh);
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void OnDataChanged(LedgerBean mode) {//切换账本
+        if (mode != null) {
+            if (mode.getId() != null && mode.getId().length() > 0) {
+                mLedgerId = mode.getId();
                 onRefresh(layoutRefresh);
             }
         }
@@ -93,6 +109,8 @@ public class BillListFragment extends SimpleFragment implements OnRefreshListene
 
     @Override
     protected void initEventAndData() {
+        ledgerBeanManager = new LedgerBeanManager(mContext);
+        mLedgerId = CookieUtil.getDefaultShowLedger();
         mUserId = CookieUtil.getUserInfo().getId();
         mBillBeanManager = new BillBeanManager(mContext);
 
@@ -127,12 +145,16 @@ public class BillListFragment extends SimpleFragment implements OnRefreshListene
 
         @Override
         protected List<BillBean> doInBackground(Object... objects) {
-            return mBillBeanManager.getBillListToCurrentTime(CookieUtil.getDefaultShowLedger(),mUserId, System.currentTimeMillis());
+            mLedgerBean = ledgerBeanManager.getLedgerById(CookieUtil.getDefaultShowLedger());
+            return mBillBeanManager.getBillListToCurrentTime(mLedgerId, mUserId, System.currentTimeMillis());
         }
 
         @Override
         protected void onPostExecute(List<BillBean> result) {
             super.onPostExecute(result);
+            if(mLedgerBean != null){
+                tvLedgerName.setText(mLedgerBean.getName());
+            }
             if (result != null && result.size() > 0) {
                 recyclerView.setVisibility(View.VISIBLE);
                 rlNoData.setVisibility(View.GONE);

@@ -20,6 +20,7 @@ import com.lotus.ourhome.model.bean.UserBean;
 import com.lotus.ourhome.model.db.FamilyMemberBeanManager;
 import com.lotus.ourhome.model.db.GoodsSavePlaceBeanManager;
 import com.lotus.ourhome.model.db.GoodsTypeBeanManager;
+import com.lotus.ourhome.model.db.LedgerBeanManager;
 import com.lotus.ourhome.model.db.MoneyUseTypeBeanManager;
 import com.lotus.ourhome.model.db.UserBeanManager;
 import com.lotus.ourhome.util.ToastUtil;
@@ -155,7 +156,7 @@ public class RegisterActivity extends SimpleActivity {
                 goodsTypeBean.setCreateTime(System.currentTimeMillis());
                 goodsTypeBean.setId(GoodsTypeBean.createId(userId));
                 goodsTypeBean.setName(goodsTypeNameList.get(i));
-                goodsTypeBean.setIcon(goodsTypeIconList.get(i));
+                goodsTypeBean.setIcon(String.valueOf(goodsTypeIconList.get(i)));
                 goodsTypeBeanManager.saveGoodsType(goodsTypeBean);
             }
 
@@ -168,7 +169,7 @@ public class RegisterActivity extends SimpleActivity {
                 goodsSavePlaceBean.setUserId(userId);
                 goodsSavePlaceBean.setId(GoodsSavePlaceBean.createId(userId));
                 goodsSavePlaceBean.setCreateTime(System.currentTimeMillis());
-                goodsSavePlaceBean.setIcon(goodsSavePlaceIconList.get(i));
+                goodsSavePlaceBean.setIcon(String.valueOf(goodsSavePlaceIconList.get(i)));
                 goodsSavePlaceBean.setName(goodsSavePlaceNameList.get(i));
                 goodsSavePlaceBeanManager.saveGoodsSavePlaceBean(goodsSavePlaceBean);
             }

@@ -160,7 +160,7 @@ public class GoodsTypeFragment  extends SimpleFragment implements OnRefreshListe
 
         @Override
         protected Boolean doInBackground(Object... objects) {
-            return mBeanManager.saveGoods(data);
+            return mBeanManager.saveGoodsType(data);
         }
 
         @Override

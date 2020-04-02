@@ -55,25 +55,8 @@ public class BillBean extends BaseBean{
     private int happenTimeYear;
     private int happenTimeMonth;
     private int happenTimeDay;
-
-    public MoneyUseTypeBean getMoneyUseTypeBean() {
-        return moneyUseTypeBean;
-    }
-
-    public void setMoneyUseTypeBean(MoneyUseTypeBean moneyUseTypeBean) {
-        this.moneyUseTypeBean = moneyUseTypeBean;
-    }
-
+    private LedgerBean ledgerBean;
     private MoneyUseTypeBean moneyUseTypeBean;
-
-    public FamilyMemberBean getFamilyMemberBean() {
-        return familyMemberBean;
-    }
-
-    public void setFamilyMemberBean(FamilyMemberBean familyMemberBean) {
-        this.familyMemberBean = familyMemberBean;
-    }
-
     private FamilyMemberBean familyMemberBean;
 
     public static String createId(String userId, String userName) {
@@ -84,6 +67,30 @@ public class BillBean extends BaseBean{
         builder.append(BillBean.class.getName());
         builder.append(Math.random() * 1000000);
         return builder.hashCode() + StringUtil.randomString(6);
+    }
+
+    public MoneyUseTypeBean getMoneyUseTypeBean() {
+        return moneyUseTypeBean;
+    }
+
+    public void setMoneyUseTypeBean(MoneyUseTypeBean moneyUseTypeBean) {
+        this.moneyUseTypeBean = moneyUseTypeBean;
+    }
+
+    public LedgerBean getLedgerBean() {
+        return ledgerBean;
+    }
+
+    public void setLedgerBean(LedgerBean ledgerBean) {
+        this.ledgerBean = ledgerBean;
+    }
+
+    public FamilyMemberBean getFamilyMemberBean() {
+        return familyMemberBean;
+    }
+
+    public void setFamilyMemberBean(FamilyMemberBean familyMemberBean) {
+        this.familyMemberBean = familyMemberBean;
     }
 
     public String getLedgerId() {

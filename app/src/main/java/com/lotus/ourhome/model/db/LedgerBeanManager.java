@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 账本表
  */
-public class LedgerBeanManager  extends BaseDataManager {
+public class LedgerBeanManager extends BaseDataManager {
     private static final String TAG = LedgerBeanManager.class.getSimpleName();
 
     public LedgerBeanManager(Context context) {
@@ -28,19 +28,21 @@ public class LedgerBeanManager  extends BaseDataManager {
         ContentValues values = new ContentValues();
         values.put(LedgerBean.ID, ledgerBean.getId());
         values.put(LedgerBean.NAME, ledgerBean.getName());
+        values.put(LedgerBean.COLOR, ledgerBean.getColor());
         values.put(LedgerBean.USER_ID, ledgerBean.getUserId());
         values.put(LedgerBean.CREATE_TIME, ledgerBean.getCreateTime());
         open();
         return sqLiteDatabase.replace(LedgerBean.TABLE_NAME, null, values) != -1;
     }
 
-    public List<LedgerBean> getLedgerById(String id) {
-        String selection = LedgerBean.ID + "=?" ;
+    public LedgerBean getLedgerById(String id) {
+        String selection = LedgerBean.ID + "=?";
         String[] selectionArgs = {id};
-        return getLedgerList(selection, selectionArgs, null, null, null, null);
+        List<LedgerBean> ledgerBeanList = getLedgerList(selection, selectionArgs, null, null, null, null);
+        return ledgerBeanList.size() > 0 ? ledgerBeanList.get(0) : null;
     }
 
-    public List<LedgerBean> getLedgerByUserIdAndUserName(String userId) {
+    public List<LedgerBean> getLedgerByUserId(String userId) {
         String selection = LedgerBean.USER_ID + "=?";
         String[] selectionArgs = {userId};
         return getLedgerList(selection, selectionArgs, null, null, null, null);
@@ -71,6 +73,9 @@ public class LedgerBeanManager  extends BaseDataManager {
         }
         if (ArrayUtils.contains(clounms, LedgerBean.NAME)) {
             ledgerBean.setName(cursor.getString(cursor.getColumnIndexOrThrow(LedgerBean.NAME)));
+        }
+        if (ArrayUtils.contains(clounms, LedgerBean.COLOR)) {
+            ledgerBean.setColor(cursor.getString(cursor.getColumnIndexOrThrow(LedgerBean.COLOR)));
         }
         if (ArrayUtils.contains(clounms, LedgerBean.USER_ID)) {
             ledgerBean.setUserId(cursor.getString(cursor.getColumnIndexOrThrow(LedgerBean.USER_ID)));

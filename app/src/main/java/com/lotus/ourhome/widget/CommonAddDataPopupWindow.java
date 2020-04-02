@@ -108,16 +108,14 @@ public class CommonAddDataPopupWindow extends PopupWindow {
         ButterKnife.bind(this, view);
 
         mAdapter = new ChooseTypeGridAdapter(mActivity);
-        gridView.setAdapter(mAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAdapter.setSelectedData(mSelectedTypeIconId);
+        mAdapter.setOnListItemClickListener(new ChooseTypeGridAdapter.OnListItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mAdapter != null) {
-                    mAdapter.setSelectedData(mSelectedTypeIconId);
-                    mSelectedTypeIconId = mAdapter.getItem(position);
-                }
+            public void selected(int position, Integer data) {
+                mSelectedTypeIconId = data;
             }
         });
+        gridView.setAdapter(mAdapter);
         setContentView(view);
     }
 

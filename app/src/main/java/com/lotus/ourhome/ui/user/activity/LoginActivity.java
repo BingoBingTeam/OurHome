@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lotus.base.constants.BaseConstants;
+import com.lotus.base.utils.file.FileUtil;
 import com.lotus.ourhome.R;
 import com.lotus.ourhome.app.App;
 import com.lotus.ourhome.app.Constants;
@@ -38,7 +39,9 @@ import com.lotus.ourhome.model.bean.UserBean;
 import com.lotus.ourhome.model.db.FamilyMemberBeanManager;
 import com.lotus.ourhome.model.db.GoodsSavePlaceBeanManager;
 import com.lotus.ourhome.model.db.GoodsTypeBeanManager;
+import com.lotus.ourhome.model.db.LedgerBeanManager;
 import com.lotus.ourhome.model.db.MoneyUseTypeBeanManager;
+import com.lotus.ourhome.model.db.SQLiteHelper;
 import com.lotus.ourhome.model.db.UserBeanManager;
 import com.lotus.ourhome.ui.main.activity.MainActivity;
 import com.lotus.ourhome.util.CookieUtil;
@@ -220,7 +223,7 @@ public class LoginActivity extends SimpleActivity {
         @Override
         protected Boolean doInBackground(Object... objects) {
             //若无数据，添加默认的家庭成员
-            FamilyMemberBeanManager mFamilyMemberBeanManager = new FamilyMemberBean();
+            FamilyMemberBeanManager mFamilyMemberBeanManager = new FamilyMemberBeanManager(mContext);
             List<FamilyMemberBean> familyMemberBeanList = mFamilyMemberBeanManager.getFamilyMemberByUserId(userId);
             if (familyMemberBeanList == null || familyMemberBeanList.size() == 0) {
                 FamilyMemberBean bean = new FamilyMemberBean();
@@ -290,7 +293,7 @@ public class LoginActivity extends SimpleActivity {
                     goodsTypeBean.setCreateTime(System.currentTimeMillis());
                     goodsTypeBean.setId(GoodsTypeBean.createId(userId));
                     goodsTypeBean.setName(goodsTypeNameList.get(i));
-                    goodsTypeBean.setIcon(goodsTypeIconList.get(i));
+                    goodsTypeBean.setIcon(String.valueOf(goodsTypeIconList.get(i)));
                     goodsTypeBeanManager.saveGoodsType(goodsTypeBean);
                 }
             }
@@ -306,7 +309,7 @@ public class LoginActivity extends SimpleActivity {
                     goodsSavePlaceBean.setUserId(userId);
                     goodsSavePlaceBean.setId(GoodsSavePlaceBean.createId(userId));
                     goodsSavePlaceBean.setCreateTime(System.currentTimeMillis());
-                    goodsSavePlaceBean.setIcon(goodsSavePlaceIconList.get(i));
+                    goodsSavePlaceBean.setIcon(String.valueOf(goodsSavePlaceIconList.get(i)));
                     goodsSavePlaceBean.setName(goodsSavePlaceNameList.get(i));
                     goodsSavePlaceBeanManager.saveGoodsSavePlaceBean(goodsSavePlaceBean);
                 }

@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import com.lotus.ourhome.model.bean.BillBean;
 import com.lotus.ourhome.model.bean.FamilyMemberBean;
+import com.lotus.ourhome.model.bean.LedgerBean;
 import com.lotus.ourhome.model.bean.MoneyUseTypeBean;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -81,10 +82,8 @@ public class BillBeanManager extends BaseDataManager {
         Cursor cursor = queryBillBean(selection, selectionArgs, groupBy, having, orderBy, limit);
         while (cursor != null && cursor.moveToNext()) {
             BillBean billBean = getBillBean(BillBean.TABLE_COLUMN, cursor);
-
             MoneyUseTypeBean moneyUseTypeBean = moneyUseTypeBeanManager.getMoneyUseTypeById(billBean.getMoneyUseTypeId());
             FamilyMemberBean familyMemberBean = familyMemberBeanManager.getFamilyMemberById(billBean.getHappenPerson());
-
             billBean.setFamilyMemberBean(familyMemberBean);
             billBean.setMoneyUseTypeBean(moneyUseTypeBean);
             billBeanList.add(billBean);
