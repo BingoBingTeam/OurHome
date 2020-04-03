@@ -22,7 +22,7 @@ public class CookieUtil {
 
     public static String getDefaultShowLedger() {
         CacheUtil cache = CacheUtil.build(App.getInstance());
-        return (String)cache.get(Constants.SP_DEFAULT_SHOW_LEDGER, false);
+        return (String)cache.get(Constants.SP_DEFAULT_SHOW_LEDGER, "");
     }
 
     /**

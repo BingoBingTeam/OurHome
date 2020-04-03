@@ -66,12 +66,12 @@ public class MoneyUseTypeBean extends BaseBean{
     }
 
     //=======================================================================================================
-    public static final int DEFAULT_NO_SELECTED_TYPE_ICON = -1;
+    public static final int DEFAULT_NO_SELECTED_TYPE_ICON = R.mipmap.ic_money;
     public static List<Integer> getMoneyUserTypeIconList(String type){
         List<Integer> list = new ArrayList<>();
+        list.add(R.mipmap.ic_money);
         list.add(R.mipmap.ic_saving_pot);
         list.add(R.mipmap.ic_money_packet);
-        list.add(R.mipmap.ic_money);
         list.add(R.mipmap.ic_mark);
         list.add(R.mipmap.ic_red_packet);
         list.add(R.mipmap.ic_wallet);

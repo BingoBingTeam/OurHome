@@ -77,6 +77,17 @@ public class FamilyMemberFragment extends SimpleFragment implements OnRefreshLis
         });
 
         mAdapter = new FamilyMemberListAdapter(mContext);
+        mAdapter.setOnListItemClickListener(new FamilyMemberListAdapter.OnListItemClickListener() {
+            @Override
+            public void edit(int position, FamilyMemberBean data) {
+
+            }
+
+            @Override
+            public void delete(int position, FamilyMemberBean data) {
+
+            }
+        });
         listView.setAdapter(mAdapter);
         layoutRefresh.setOnRefreshListener(this);
         onRefresh(layoutRefresh);

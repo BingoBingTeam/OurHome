@@ -11,8 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lotus.base.widget.CircleTextView;
 import com.lotus.ourhome.R;
-import com.lotus.ourhome.model.bean.FamilyMemberBean;
 import com.lotus.ourhome.model.bean.MoneyUseTypeBean;
 
 import java.util.ArrayList;
@@ -21,14 +21,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ChooseMoneyUseTypeRecyclerAdapter  extends RecyclerView.Adapter<ChooseMoneyUseTypeRecyclerAdapter.ViewHolder> {
+public class ChooseMoneyUseTypeRecyclerAdapter extends RecyclerView.Adapter<ChooseMoneyUseTypeRecyclerAdapter.ViewHolder> {
 
     private ArrayList<MoneyUseTypeBean> mData = new ArrayList<>();
     private Context mContext;
     private MoneyUseTypeBean mChoseData = null;
     private OnMoneyUseTypeListItemClick mOnListItemClick = null;
 
-    public ChooseMoneyUseTypeRecyclerAdapter(Context context){
+    public ChooseMoneyUseTypeRecyclerAdapter(Context context) {
         this.mContext = context;
     }
 
@@ -43,7 +43,7 @@ public class ChooseMoneyUseTypeRecyclerAdapter  extends RecyclerView.Adapter<Cho
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_cell_choose_money_use_type, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.list_cell_choose_money_use_type, parent, false);
         return new ViewHolder(view);
     }
 
@@ -52,16 +52,14 @@ public class ChooseMoneyUseTypeRecyclerAdapter  extends RecyclerView.Adapter<Cho
         MoneyUseTypeBean data = mData.get(position);
         holder.tvName.setText(data.getName());
         if (data.equals(mChoseData)) {
-            holder.tvName.setBackgroundResource(R.drawable.bg_filtrate_text_selected);
+         //   holder.tvName.setBackgroundResource(R.drawable.bg_filtrate_text_selected);
             holder.tvName.setTextColor(mContext.getResources().getColor(R.color.color_filtrate_text_selected));
         } else {
-            holder.tvName.setBackgroundResource(R.drawable.bg_filtrate_text_default);
+         //   holder.tvName.setBackgroundResource(R.drawable.bg_filtrate_text_default);
             holder.tvName.setTextColor(mContext.getResources().getColor(R.color.color_filtrate_text_default));
         }
         Integer iconId = Integer.parseInt(data.getIcon());
-        if(iconId != MoneyUseTypeBean.DEFAULT_NO_SELECTED_TYPE_ICON){
-            holder.imageView.setImageResource(iconId);
-        }
+        holder.imageView.setImageResource(iconId);
         holder.llCell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,15 +76,15 @@ public class ChooseMoneyUseTypeRecyclerAdapter  extends RecyclerView.Adapter<Cho
      * 增加列表数据
      */
     public void initData(List<MoneyUseTypeBean> list, boolean isReset) {
-        if(isReset){
+        if (isReset) {
             mData.clear();
         }
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return;
         }
-        int startIndex= mData.size();
+        int startIndex = mData.size();
         mData.addAll(list);
-        notifyItemRangeInserted(startIndex,list.size());
+        notifyItemRangeInserted(startIndex, list.size());
     }
 
     /**
@@ -125,21 +123,24 @@ public class ChooseMoneyUseTypeRecyclerAdapter  extends RecyclerView.Adapter<Cho
         return mData.size();
     }
 
+
+    public interface OnMoneyUseTypeListItemClick {
+        public void onItemClick(MoneyUseTypeBean content);
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.ll_cell)
-        LinearLayout llCell;
+        @BindView(R.id.circle_view)
+        CircleTextView circleView;
         @BindView(R.id.image_view)
         ImageView imageView;
         @BindView(R.id.tv_name)
         TextView tvName;
+        @BindView(R.id.ll_cell)
+        LinearLayout llCell;
 
-        public ViewHolder(@NonNull View view) {
+        ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
-    }
-
-    public interface OnMoneyUseTypeListItemClick {
-        public void onItemClick(MoneyUseTypeBean content);
     }
 }

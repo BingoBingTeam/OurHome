@@ -7,6 +7,10 @@ import com.lotus.base.utils.string.StringUtil;
  */
 public class FamilyMemberBean extends BaseBean {
 
+    public static final String DEFAULT_MEMBER_SELF = "我";
+    public static final String DEFAULT_MEMBER_FAMILY = "全家";
+    //=======================================================================================================
+
     public static final String USER_ID = "user_id";//登陆者id
     public static final String REMARK = "remark";//备注
 

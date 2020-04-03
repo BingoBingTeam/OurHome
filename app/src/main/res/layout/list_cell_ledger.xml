@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.lotus.base.widget.square.SquareLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_item"
-    android:background="@drawable/btn_white_circle10_rectangle"
+    android:background="?android:attr/selectableItemBackground"
+    android:layout_margin="9dp"
+    android:padding="3dp"
     android:layout_width="match_parent"
     android:layout_height="100dp">
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <TextView
         android:id="@+id/tv_name"
         android:padding="8dp"
@@ -11,7 +17,7 @@
         android:layout_height="match_parent"
         android:text="名称"
         android:visibility="gone"
-        android:textColor="@color/app_text"
+        android:textColor="@color/app_text_gray"
         android:textSize="@dimen/small_size"/>
     <ImageView
         android:id="@+id/btn_delete"
@@ -23,17 +29,12 @@
         android:src="@mipmap/ic_pic_delete"
         android:visibility="gone" />
     <ImageView
-        android:id="@+id/image_view"
+        android:id="@+id/image_add"
+        android:background="@color/white"
+        android:padding="1dp"
         android:src="@mipmap/img_add"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:background="@drawable/bg_rectangle_ripple"
-        android:duplicateParentState="true" />
 
 </com.lotus.base.widget.square.SquareLayout>

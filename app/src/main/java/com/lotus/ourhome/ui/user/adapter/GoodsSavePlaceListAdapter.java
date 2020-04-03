@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lotus.ourhome.R;
+import com.lotus.ourhome.model.bean.FamilyMemberBean;
 import com.lotus.ourhome.model.bean.GoodsSavePlaceBean;
+import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ public class GoodsSavePlaceListAdapter  extends BaseAdapter {
 
     private Context mContext;
     private List<GoodsSavePlaceBean> mData = new ArrayList<>();
+    private OnListItemClickListener mOnListItemClickListener;
 
     public GoodsSavePlaceListAdapter(Context context) {
         this.mContext = context;
@@ -33,6 +37,10 @@ public class GoodsSavePlaceListAdapter  extends BaseAdapter {
             return;
         }
         mData.addAll(data);
+    }
+
+    public void setOnListItemClickListener(OnListItemClickListener mOnListItemClickListener) {
+        this.mOnListItemClickListener = mOnListItemClickListener;
     }
 
     @Override
@@ -61,19 +69,55 @@ public class GoodsSavePlaceListAdapter  extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         GoodsSavePlaceBean data = getItem(position);
-        viewHolder.tvName.setText(data.getName());
+        String name = data.getName();
+        viewHolder.imageView.setImageResource(Integer.parseInt(data.getIcon()));
+        viewHolder.tvName.setText(name);
+        if(FamilyMemberBean.DEFAULT_MEMBER_FAMILY.equals(name) || FamilyMemberBean.DEFAULT_MEMBER_SELF.equals(name)){
+            viewHolder.rlCell.setSwipeEnable(false);
+        }else {
+            viewHolder.rlCell.setSwipeEnable(true);
+        }
+        viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mOnListItemClickListener != null){
+                    mOnListItemClickListener.delete(position,data);
+                }
+            }
+        });
+        viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mOnListItemClickListener != null){
+                    mOnListItemClickListener.edit(position,data);
+                }
+            }
+        });
         return convertView;
     }
 
     static class ViewHolder {
+        @BindView(R.id.rl_cell)
+        SwipeMenuLayout rlCell;
+        @BindView(R.id.image_view)
+        ImageView imageView;
         @BindView(R.id.tv_name)
         TextView tvName;
         @BindView(R.id.tv_remark)
         TextView tvRemark;
+        @BindView(R.id.btn_edit)
+        TextView btnEdit;
+        @BindView(R.id.btn_delete)
+        TextView btnDelete;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
+    }
+
+    public interface OnListItemClickListener{
+        public void edit(int position, GoodsSavePlaceBean data);
+        public void delete(int position,GoodsSavePlaceBean data);
     }
 }
 

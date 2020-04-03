@@ -78,6 +78,7 @@ public class GoodsSavePlaceFragment extends SimpleFragment implements OnRefreshL
         });
 
         mAdapter = new GoodsSavePlaceListAdapter(mContext);
+
         listView.setAdapter(mAdapter);
         layoutRefresh.setOnRefreshListener(this);
         onRefresh(layoutRefresh);

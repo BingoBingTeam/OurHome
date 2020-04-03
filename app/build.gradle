@@ -139,5 +139,6 @@ dependencies {
     implementation project(path: ':opengallery')
     implementation project(path: ':res-sweetalertdialog')
     implementation project(path: ':res_base')
+    implementation 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.3.0'//侧滑菜单，0耦合，支持任意ViewGroup
 
 }

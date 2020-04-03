@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.lotus.base.widget.CircleTextView;
 import com.lotus.ourhome.R;
+import com.lotus.ourhome.model.bean.LedgerBean;
 import com.lotus.ourhome.model.bean.MoneyUseTypeBean;
 
 import java.util.ArrayList;
@@ -37,6 +38,11 @@ public class ChooseTypeGridAdapter extends BaseAdapter {
 
     public void setType(int mType) {
         this.mType = mType;
+        if (_TYPE_CHOOSE_COLOR == mType) {
+            mSelectedData = LedgerBean.DEFAULT_NO_SELECTED_TYPE_COLOR;
+        } else {
+            mSelectedData = MoneyUseTypeBean.DEFAULT_NO_SELECTED_TYPE_ICON;
+        }
     }
 
     public ChooseTypeGridAdapter(Context context) {
@@ -84,11 +90,11 @@ public class ChooseTypeGridAdapter extends BaseAdapter {
         } else {
             viewHolder.llCell.setBackgroundColor(mContext.getColor(R.color.white));
         }
-        if(_TYPE_CHOOSE_COLOR == mType){
+        if (_TYPE_CHOOSE_COLOR == mType) {
             viewHolder.imageView.setVisibility(View.GONE);
             viewHolder.circleView.setVisibility(View.VISIBLE);
             viewHolder.circleView.setBgColor(data);
-        }else {
+        } else {
             viewHolder.imageView.setVisibility(View.VISIBLE);
             viewHolder.circleView.setVisibility(View.GONE);
             viewHolder.imageView.setImageResource(data);
@@ -98,8 +104,11 @@ public class ChooseTypeGridAdapter extends BaseAdapter {
             public void onClick(View v) {
                 if (mOnListItemClickListener != null) {
                     if (data.equals(mSelectedData)) {
-                        mSelectedData = MoneyUseTypeBean.DEFAULT_NO_SELECTED_TYPE_ICON;
-                        ;
+                        if (_TYPE_CHOOSE_COLOR == mType) {
+                            mSelectedData = LedgerBean.DEFAULT_NO_SELECTED_TYPE_COLOR;
+                        } else {
+                            mSelectedData = MoneyUseTypeBean.DEFAULT_NO_SELECTED_TYPE_ICON;
+                        }
                     } else {
                         mSelectedData = data;
                     }

@@ -56,10 +56,11 @@ public class LedgerBean  extends BaseBean{
         this.userId = userId;
     }
     //=======================================================================================================
+    public static final int DEFAULT_NO_SELECTED_TYPE_COLOR = R.color.app_main;
     public static List<Integer> getDefaultColorList(){
         List<Integer> list = new ArrayList<>();
-        list.add(R.color.red);
         list.add(R.color.app_main);
+        list.add(R.color.red);
         list.add(R.color.HotPink);
         list.add(R.color.Green);
         list.add(R.color.DarkCyan);

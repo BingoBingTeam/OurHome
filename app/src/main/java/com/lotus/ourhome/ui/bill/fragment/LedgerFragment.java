@@ -1,6 +1,7 @@
 package com.lotus.ourhome.ui.bill.fragment;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.GridView;
 
@@ -42,6 +43,13 @@ public class LedgerFragment extends SimpleFragment {
     private LedgerBeanManager mLedgerBeanManager;
     private QueryListDataAsync mQueryListDataAsync;
 
+    public static LedgerFragment newInstance() {
+        Bundle args = new Bundle();
+        LedgerFragment fragment = new LedgerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     protected int setLayoutId() {
         return R.layout.fragment_ledger;
@@ -53,6 +61,12 @@ public class LedgerFragment extends SimpleFragment {
         mUserId = CookieUtil.getUserInfo().getId();
 
         titleBar.setTitle("账本");
+        titleBar.setClickListenerIvBack(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _mActivity.onBackPressed();
+            }
+        });
 
         mAdapter = new LedgerListAdapter(mContext);
         mAdapter.setEnabled(true,false);

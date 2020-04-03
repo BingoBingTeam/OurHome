@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.lotus.base.widget.square.SquareLayout;
 import com.lotus.ourhome.R;
 import com.lotus.ourhome.model.bean.LedgerBean;
 
@@ -122,11 +123,11 @@ public class LedgerListAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if(mIsEditableAdd && position == 0){
+        if (mIsEditableAdd && position == 0) {
             return _TYPE_EDITABLE_ADD_VIEW;
-        }else if(mIsEditableDelete){
+        } else if (mIsEditableDelete) {
             return _TYPE_EDITABLE_DELETE_VIEW;
-        }else {
+        } else {
             return _TYPE_DATA_VIEW;
         }
     }
@@ -143,11 +144,13 @@ public class LedgerListAdapter extends BaseAdapter {
         }
         holder.tvName.setVisibility(getItemViewType(position) != _TYPE_EDITABLE_ADD_VIEW ? View.VISIBLE : View.GONE);
         holder.btnDelete.setVisibility(getItemViewType(position) == _TYPE_EDITABLE_DELETE_VIEW ? View.VISIBLE : View.GONE);
-        holder.imageView.setVisibility(getItemViewType(position) == _TYPE_EDITABLE_ADD_VIEW ? View.VISIBLE : View.GONE);
+        holder.imageAdd.setVisibility(getItemViewType(position) == _TYPE_EDITABLE_ADD_VIEW ? View.VISIBLE : View.GONE);
 
         LedgerBean data = getItem(position);
-        holder.tvName.setText(data.getName());
-        holder.tvName.setBackgroundColor(Integer.parseInt(data.getColor()));
+        if (data != null) {
+            holder.tvName.setText(data.getName());
+            holder.imageView.setBackgroundResource(Integer.parseInt(data.getColor()));
+        }
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,14 +187,16 @@ public class LedgerListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        @BindView(R.id.image_view)
-        ImageView imageView;
         @BindView(R.id.tv_name)
         TextView tvName;
         @BindView(R.id.btn_delete)
         ImageView btnDelete;
+        @BindView(R.id.image_add)
+        ImageView imageAdd;
+        @BindView(R.id.image_view)
+        ImageView imageView;
         @BindView(R.id.rl_item)
-        RelativeLayout rlItem;
+        SquareLayout rlItem;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

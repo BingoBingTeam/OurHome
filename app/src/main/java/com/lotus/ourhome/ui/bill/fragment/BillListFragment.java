@@ -170,7 +170,7 @@ public class BillListFragment extends SimpleFragment implements OnRefreshListene
      * 显示所有账本
      */
     private void showMoreLedger() {
-
+        ((MainFragment) getParentFragment()).start(LedgerFragment.newInstance());
     }
 
     /**

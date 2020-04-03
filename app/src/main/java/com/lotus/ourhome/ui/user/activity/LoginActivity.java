@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.lotus.base.constants.BaseConstants;
 import com.lotus.base.utils.file.FileUtil;
+import com.lotus.base.utils.string.StringUtil;
 import com.lotus.ourhome.R;
 import com.lotus.ourhome.app.App;
 import com.lotus.ourhome.app.Constants;
@@ -57,6 +58,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.utils.DialogUtils;
 import cn.pedant.SweetAlert.views.SweetAlertDialog;
 
 public class LoginActivity extends SimpleActivity {
@@ -82,12 +84,13 @@ public class LoginActivity extends SimpleActivity {
     @BindView(R.id.check_remember_psw)
     CheckBox checkRememberPsw;
 
-    private Context mContext;
     private UserBean mUserBean;
     private QueryDataAsync mQueryDataAsync;
     private PermissionUtil mPermissionUtil;
     private UserBeanManager mBeanManager;
-    private SaveDataAsync mSaveDataAsync;
+    private InitAndSaveBaseDataAsync mInitAndSaveBaseDataAsync;
+    private CopyDbAsync mCopyDbAsync;
+    private SweetAlertDialog mLoadingDialog = null;
 
     @Override
     protected int setLayout() {
@@ -96,7 +99,7 @@ public class LoginActivity extends SimpleActivity {
 
     @Override
     protected void initEventAndData() {
-        mContext = this;
+        mLoadingDialog = DialogUtils.getLoadingDialog(mContext);
         mBeanManager = new UserBeanManager(this);
         judgePermission();
         checkAutoLogin.setChecked(CookieUtil.getAutoLogin());
@@ -167,6 +170,14 @@ public class LoginActivity extends SimpleActivity {
     private void login() {
         String username = edName.getText().toString().trim();
         String psw = edPsw.getText().toString().trim();
+        if(StringUtils.isEmpty(username) || StringUtils.isEmpty(psw)){
+            ToastUtil.longShow(mContext,"用户名或密码不能为空");
+            return;
+        }
+        if(mLoadingDialog.isShowing()){
+            mLoadingDialog.dismiss();
+        }
+        mLoadingDialog.show();
         if (mQueryDataAsync != null) {
             mQueryDataAsync.cancel(true);
         }
@@ -191,32 +202,32 @@ public class LoginActivity extends SimpleActivity {
         @Override
         protected void onPostExecute(UserBean result) {
             super.onPostExecute(result);
+            mQueryDataAsync = null;
             if (result != null) {
-                ToastUtil.longShow(LoginActivity.this, "登陆成功");
                 CookieUtil.setAuth(true);
                 CookieUtil.setAutoLogin(checkAutoLogin.isChecked());
                 CookieUtil.setRememberPsw(checkRememberPsw.isChecked());
                 CookieUtil.saveUserInfo(result);
-                saveData(result.getId());
+                initAndSaveBaseData(result.getId());
             } else {
+                mLoadingDialog.dismiss();
                 ToastUtil.longShow(LoginActivity.this, "登陆失败,用户名或密码不匹配");
             }
         }
     }
 
-
-    private void saveData(String userId) {
-        if (mSaveDataAsync != null) {
-            mSaveDataAsync.cancel(true);
+    private void initAndSaveBaseData(String userId) {
+        if (mInitAndSaveBaseDataAsync != null) {
+            mInitAndSaveBaseDataAsync.cancel(true);
         }
-        mSaveDataAsync = new SaveDataAsync(userId);
-        mSaveDataAsync.execute(AsyncTask.THREAD_POOL_EXECUTOR);
+        mInitAndSaveBaseDataAsync = new InitAndSaveBaseDataAsync(userId);
+        mInitAndSaveBaseDataAsync.execute(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private class SaveDataAsync extends AsyncTask<Object, Integer, Boolean> {
+    private class InitAndSaveBaseDataAsync extends AsyncTask<Object, Integer, Boolean> {
         String userId = "";
 
-        private SaveDataAsync(String userId) {
+        private InitAndSaveBaseDataAsync(String userId) {
             this.userId = userId;
         }
 
@@ -228,16 +239,24 @@ public class LoginActivity extends SimpleActivity {
             if (familyMemberBeanList == null || familyMemberBeanList.size() == 0) {
                 FamilyMemberBean bean = new FamilyMemberBean();
                 bean.setId(FamilyMemberBean.createId(userId));
-                bean.setName("我");
+                bean.setName(FamilyMemberBean.DEFAULT_MEMBER_SELF);
                 bean.setRemark("");
                 bean.setUserId(userId);
                 bean.setCreateTime(System.currentTimeMillis());
                 mFamilyMemberBeanManager.saveFamilyMember(bean);
+
+                FamilyMemberBean familyBean = new FamilyMemberBean();
+                familyBean.setId(FamilyMemberBean.createId(userId));
+                familyBean.setName(FamilyMemberBean.DEFAULT_MEMBER_FAMILY);
+                familyBean.setRemark("");
+                familyBean.setUserId(userId);
+                familyBean.setCreateTime(System.currentTimeMillis());
+                mFamilyMemberBeanManager.saveFamilyMember(familyBean);
             }
 
             //若无数据，添加一个默认的账本
             LedgerBeanManager ledgerBeanManager = new LedgerBeanManager(mContext);
-            List<LedgerBean> ledgerBeanList = ledgerBeanManager.getLedgerByUserIdAndUserName(userId);
+            List<LedgerBean> ledgerBeanList = ledgerBeanManager.getLedgerByUserId(userId);
             if (ledgerBeanList == null || ledgerBeanList.size() == 0) {
                 LedgerBean ledgerBean = new LedgerBean();
                 ledgerBean.setUserId(userId);
@@ -246,6 +265,8 @@ public class LoginActivity extends SimpleActivity {
                 ledgerBean.setName(LedgerBean.DEFAULT_LEDGER);
                 ledgerBeanManager.saveLedgerBean(ledgerBean);
                 CookieUtil.setDefaultShowLedger(ledgerBean.getId());//保存默认显示的账本id
+            }else if(ledgerBeanList.size() == 1 && StringUtils.isEmpty(CookieUtil.getDefaultShowLedger())){
+                CookieUtil.setDefaultShowLedger(ledgerBeanList.get(0).getId());//默认显示唯一的一个账本
             }
 
             //若无数据，添加默认的钱的使用类别
@@ -320,6 +341,9 @@ public class LoginActivity extends SimpleActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
+            mInitAndSaveBaseDataAsync = null;
+            mLoadingDialog.dismiss();
+            ToastUtil.longShow(LoginActivity.this, "登陆成功");
             jumpToMain();
         }
     }
@@ -357,26 +381,7 @@ public class LoginActivity extends SimpleActivity {
         int result = mPermissionUtil.checkPermissions();
         switch (result) {
             case PermissionUtil.ACTION_GRANTED_ALL_PERMISSION://通过了所有的权限
-                File file = getDatabasePath(SQLiteHelper.DATABASE_NAME);
-                if (file.exists()) {
-                    String newPath = BaseConstants.APP_FOLDER + "/" + SQLiteHelper.DATABASE_NAME;
-                    File folder = new File(BaseConstants.APP_FOLDER);
-                    if (!folder.exists()) {
-                        folder.mkdirs();
-                    }
-                    File database = new File(newPath);
-                    if (database.exists()) {
-                        database.delete();
-                    }
-                    FileUtil.copyFile(file.getAbsolutePath(), newPath);
-                }
-                if (CookieUtil.getAuth()) {
-                    jumpToMain();
-                    return;
-                }
-                if (CookieUtil.getAutoLogin()) {
-                    login();
-                }
+                copyDbDataAndJump();
                 break;
             case PermissionUtil.ACTION_START_ACTIVITY_FOR_RESULT://startActivityForResult
                 startActivityForResult(mPermissionUtil.getIntent(), PermissionUtil.REQUEST_CODE_FOR_OVER_DRAW);//上层绘制权限检测
@@ -384,6 +389,47 @@ public class LoginActivity extends SimpleActivity {
             case PermissionUtil.ACTION_REQUEST_PERMISSIONS://requestPermissions
                 requestPermissions(mPermissionUtil.getPermissionsArray(), PermissionUtil.REQUEST_CODE_FOR_MULTIPLE_PERMISSION);//权限检测
                 break;
+        }
+    }
+
+    private void copyDbDataAndJump() {
+        if(mCopyDbAsync != null){
+            mCopyDbAsync.cancel(true);
+        }
+        mCopyDbAsync = new CopyDbAsync();
+        mCopyDbAsync.execute(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private class CopyDbAsync extends AsyncTask<Object, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Object... objects) {
+            File file = getDatabasePath(SQLiteHelper.DATABASE_NAME);
+            if (file.exists()) {
+                String newPath = BaseConstants.APP_FOLDER + "/" + SQLiteHelper.DATABASE_NAME;
+                File folder = new File(BaseConstants.APP_FOLDER);
+                if (!folder.exists()) {
+                    folder.mkdirs();
+                }
+                File database = new File(newPath);
+                if (database.exists()) {
+                    database.delete();
+                }
+                FileUtil.copyFile(file.getAbsolutePath(), newPath);
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if (CookieUtil.getAuth()) {
+                jumpToMain();
+                return;
+            }
+            if (CookieUtil.getAutoLogin()) {
+                login();
+            }
         }
     }
 

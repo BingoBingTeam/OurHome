@@ -31,7 +31,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 读取手机状态配置 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
+    <!-- 应用升级申请安装 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.READ_LOGS" tools:ignore="ProtectedPermissions" />
 
     <application
@@ -43,7 +44,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.main.activity.WelcomeActivity">
+        <activity android:name=".ui.main.activity.WelcomeActivity"
+            android:theme="@style/IndexStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

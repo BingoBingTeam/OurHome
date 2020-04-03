@@ -1,9 +1,12 @@
 package com.lotus.ourhome.ui.bill.fragment;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,6 +36,7 @@ import com.lotus.ourhome.widget.InputMoneyView;
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -84,12 +88,37 @@ public class AddBillFragment extends SimpleFragment {
     private QueryMemberListAsync mQueryMemberListAsync = null;
     private FamilyMemberBean mSelectedFamilyMemberBean = null;
     private ChooseFamilyMemberRecyclerAdapter mChooseFamilyMemberAdapter = null;
+    private List<FamilyMemberBean> mFamilyMemberList = new ArrayList<>();
 
     private MoneyUseTypeBeanManager mMoneyUseTypeBeanManager = null;
     private QueryMoneyUseTypeListDataAsync mQueryMoneyUseTypeListDataAsync = null;
     private MoneyUseTypeBean mSelectedMoneyUseTypeBean = null;
     private ChooseMoneyUseTypeRecyclerAdapter mChooseMoneyUseTypeAdapter = null;
+    private List<MoneyUseTypeBean> mMoneyUseTypeList = new ArrayList<>();
 
+    private static final int DELAY_MILLIS_TIME = 500;
+    private static final int HANDLER_REFRESH_VIEW_MONEY_USE_TYPE = 0;
+    private static final int HANDLER_REFRESH_VIEW_FAMILY_MEMBER = 1;
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case HANDLER_REFRESH_VIEW_FAMILY_MEMBER:
+                    if (mChooseFamilyMemberAdapter != null) {
+                        mChooseFamilyMemberAdapter.initData(mFamilyMemberList, true);
+                    }
+                    break;
+                case HANDLER_REFRESH_VIEW_MONEY_USE_TYPE:
+                    if (mChooseMoneyUseTypeAdapter != null) {
+                        mChooseMoneyUseTypeAdapter.initData(mMoneyUseTypeList, true);
+                    }
+                    break;
+            }
+        }
+    };
 
     public static AddBillFragment newInstance() {
         Bundle args = new Bundle();
@@ -135,13 +164,14 @@ public class AddBillFragment extends SimpleFragment {
         });
         recyclerViewFamilyMember.setAdapter(mChooseFamilyMemberAdapter);
 
-        recyclerViewUseType = initRecycleView(recyclerViewUseType, 8);
+        recyclerViewUseType = initRecycleView(recyclerViewUseType, 6);
         mChooseMoneyUseTypeAdapter = new ChooseMoneyUseTypeRecyclerAdapter(mContext);
         mChooseMoneyUseTypeAdapter.setOnListItemClick(new ChooseMoneyUseTypeRecyclerAdapter.OnMoneyUseTypeListItemClick() {
             @Override
-            public void onItemClick(MoneyUseTypeBean content) {
-                mSelectedMoneyUseTypeBean = content;
-                tvMoneyType.setText(content.getName());
+            public void onItemClick(MoneyUseTypeBean data) {
+                mSelectedMoneyUseTypeBean = data;
+                tvMoneyType.setText(data.getName());
+                imgMoneyType.setImageResource(Integer.parseInt(data.getIcon()));
             }
         });
         recyclerViewUseType.setAdapter(mChooseMoneyUseTypeAdapter);
@@ -255,7 +285,7 @@ public class AddBillFragment extends SimpleFragment {
      * 设置RecycleView
      */
     private RecyclerView initRecycleView(RecyclerView recycleView, int spanCount) {
-        recycleView.setLayoutManager(new GridLayoutManager(mActivity, spanCount == 0 ? 6 : spanCount) {
+        recycleView.setLayoutManager(new GridLayoutManager(mActivity, spanCount) {
             @Override
             public boolean canScrollVertically() {
                 //解决ScrollView里存在多个RecyclerView时滑动卡顿的问题
@@ -300,7 +330,9 @@ public class AddBillFragment extends SimpleFragment {
         @Override
         protected void onPostExecute(List<FamilyMemberBean> result) {
             super.onPostExecute(result);
-            mChooseFamilyMemberAdapter.initData(result, true);
+            mFamilyMemberList.clear();
+            mFamilyMemberList.addAll(result);
+            mHandler.sendEmptyMessageDelayed(HANDLER_REFRESH_VIEW_FAMILY_MEMBER, DELAY_MILLIS_TIME);
         }
     }
 
@@ -322,11 +354,13 @@ public class AddBillFragment extends SimpleFragment {
         @Override
         protected void onPostExecute(List<MoneyUseTypeBean> result) {
             super.onPostExecute(result);
-            mChooseMoneyUseTypeAdapter.initData(result, true);
+            mMoneyUseTypeList.clear();
+            mMoneyUseTypeList.addAll(result);
+            mHandler.sendEmptyMessageDelayed(HANDLER_REFRESH_VIEW_MONEY_USE_TYPE, DELAY_MILLIS_TIME);
         }
     }
 
-    @OnClick({R.id.btn_close,R.id.btn_income, R.id.btn_expenses, R.id.tv_use_time})
+    @OnClick({R.id.btn_close, R.id.btn_income, R.id.btn_expenses, R.id.tv_use_time})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_close:

@@ -40,7 +40,7 @@ public class ChooseFamilyMemberRecyclerAdapter  extends RecyclerView.Adapter<Cho
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_cell_choose_family_member_, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.list_cell_choose_family_member, parent, false);
         return new ViewHolder(view);
     }
 
