@@ -1,2 +1,2 @@
-include ':app', ':res-sweetalertdialog', ':res-pagerindicator', ':opengallery', ':res_base'
+include ':app'
 rootProject.name='OurHome'

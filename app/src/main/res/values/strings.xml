@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">OurHome</string>
-    <string name="bottom_bar_title_bill">账单</string>
-    <string name="bottom_bar_title_statistics">统计</string>
-    <string name="bottom_bar_title_goods">物品</string>
-    <string name="bottom_bar_title_main">我的</string>
+    <string name="title_bill">账单</string>
+    <string name="title_statistics">统计</string>
+    <string name="title_goods">物品</string>
+    <string name="title_mine">我的</string>
     <string name="register_title">注册</string>
     <string name="tab_title_expenses">支出</string>
     <string name="tab_title_income">收入</string>

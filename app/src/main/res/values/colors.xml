@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="tab_unselect">#c9c9c9</color>
-    <color name="bg_btn">#dadada</color>
-
-    <color name="color_filtrate_text_default">#555555</color>
-    <color name="color_filtrate_text_selected">#488EEE</color>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
 </resources>

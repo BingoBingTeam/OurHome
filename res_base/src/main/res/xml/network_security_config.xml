@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<network-security-config>
-    <!-- 允许开启http请求 适配Android9.0-->
-    <base-config cleartextTrafficPermitted="true" />
-</network-security-config>
