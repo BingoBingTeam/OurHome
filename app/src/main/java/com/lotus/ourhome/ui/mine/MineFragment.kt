@@ -21,8 +21,8 @@ class MineFragment : Fragment() {
     ): View? {
         mineViewModel =
             ViewModelProviders.of(this).get(MineViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
+        val root = inflater.inflate(R.layout.fragment_mine, container, false)
+        val textView: TextView = root.findViewById(R.id.text_mine)
         mineViewModel.text.observe(this, Observer {
             textView.text = it
         })

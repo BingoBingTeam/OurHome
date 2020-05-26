@@ -3,4 +3,8 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!-- 状态栏颜色 -->
+    <color name="status_bar_color_mian">#4688DC</color>
+    <color name="status_bar_color_login">#4483da</color>
 </resources>
